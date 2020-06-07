@@ -11,10 +11,13 @@ namespace Robuzzle
         Vector3Int position; // position of the tile on the Grid
         [SerializeField]
         Sides enterableSides; // sides of the tile, an agent can step on it from
+        [SerializeField]
+        Sides lowerEnterableSides; //sides of the tile, an agent can enter from and exit to lower neighboring tiles
         #endregion
         #region properties
         public Vector3Int Position { get => position; set => position = value; }
         public Sides EnterableSides { get => enterableSides; private set => enterableSides = value; }
+        public Sides LowerEnterableSides { get => lowerEnterableSides; private set => lowerEnterableSides = value; }
         #endregion
     }
 }

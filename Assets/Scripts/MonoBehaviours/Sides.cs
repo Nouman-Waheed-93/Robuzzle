@@ -4,12 +4,14 @@ using UnityEngine;
 
 namespace Robuzzle
 {
+    public enum SideName {left, right, front, back }
+
     [System.Serializable]
-    public class Sides
+    public struct Sides
     {
-        public bool left = true;
-        public bool right = true;
-        public bool front = true;
-        public bool back = true;
+        public bool left;
+        public bool right;
+        public bool front;
+        public bool back;
     }
 }

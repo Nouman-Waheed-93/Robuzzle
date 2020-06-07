@@ -4,20 +4,47 @@ using UnityEngine;
 
 namespace Robuzzle
 {
-    public class Mechanical : MovableTile
+    public abstract class Mechanical : MovableTile
     {
-        #region Methods
+        #region variables
 
-        public override void Move(Vector3Int newPosition)
+        [SerializeField]
+        protected float automaticSpeed = 0;
+
+        protected Rigidbody rb;
+
+        #endregion
+        #region AbstractMethods
+
+        /*
+         * Run the machine, negative direction value would run the machine in reverse
+         * and positive direction value would run the machine in forward.
+         */
+        public abstract void Run(int direction, float speed);
+
+
+        /*
+         * Run the machine automatically with no player input involved. 
+         * This will happen when no draggable is attached to the machine 
+         */
+        public abstract void AutomaticMove();
+
+        #endregion
+        #region ConcreteMethods
+
+        private void Start()
         {
-            base.Move(newPosition);
+            rb = GetComponent<Rigidbody>();
         }
 
-        private void AutomaticMove()
+        private void FixedUpdate()
         {
-
+            if(compound == null || !compound.isDraggable())
+            {
+                AutomaticMove();
+            }
         }
-
+        
         #endregion
     }
 }

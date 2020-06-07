@@ -26,6 +26,11 @@ namespace Robuzzle
                 tiles.Remove(tile);
         }
 
+        public bool isDraggable()
+        {
+            return draggables.Count > 0;
+        }
+
         #endregion
     }
 }
