@@ -1869,6 +1869,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fixedTile: {fileID: 621262767}
   stairTile: {fileID: 1451259050}
+  agent: {fileID: 7958119144966579664, guid: 806a2038bed71a846ab6c12f14a49bae, type: 3}
 --- !u!4 &1742766784
 Transform:
   m_ObjectHideFlags: 0

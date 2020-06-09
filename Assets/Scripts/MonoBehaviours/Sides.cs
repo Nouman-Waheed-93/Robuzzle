@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Robuzzle
 {
-    public enum SideName {left, right, front, back }
+    public enum SideName {left, right, front, back, up, down }
 
     [System.Serializable]
     public struct Sides
@@ -13,5 +13,7 @@ namespace Robuzzle
         public bool right;
         public bool front;
         public bool back;
+        public bool up;
+        public bool down;
     }
 }
