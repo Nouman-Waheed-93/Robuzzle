@@ -5,6 +5,7 @@ using UnityEngine;
 namespace Robuzzle
 {
     public enum SideName {left, right, front, back, up, down }
+    public enum SideLevel {same, lower }
 
     [System.Serializable]
     public struct Sides

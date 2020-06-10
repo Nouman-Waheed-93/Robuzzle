@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,7 +18,10 @@ namespace Robuzzle
         #region properties
 
         public Sides AttachableSides { get => attachableSides; private set => attachableSides = value; }
-        
+
+        #endregion
+        #region Events
+        public event Action<MovableTile, Vector3Int> PositionChanged;
         #endregion
         #region Methods
 
@@ -27,10 +31,12 @@ namespace Robuzzle
             compound = attachTo;
         }
 
-        public void Move(Vector3Int newPosition)
+        public void UpdatePosition()
         {
             //TODO::update the grid
-            Position = newPosition;
+            Vector3Int newPosition = Vector3Int.RoundToInt(transform.position);
+            PositionChanged(this, newPosition);
+            PathFindingNode.transform.position = Position + Vector3Int.up;
         }
 
         #endregion

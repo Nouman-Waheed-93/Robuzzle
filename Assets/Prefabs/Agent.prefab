@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 7958119144966579665}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 5, y: 1.18, z: -5.7}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -129,13 +129,20 @@ MonoBehaviour:
     right: 1
     front: 1
     back: 1
+    up: 0
+    down: 0
   lowerEnterableSides:
     left: 0
     right: 0
     front: 0
     back: 0
+    up: 0
+    down: 0
+  pathFindingNode: {fileID: 0}
   attachableSides:
     left: 0
     right: 0
     front: 0
     back: 0
+    up: 1
+    down: 0

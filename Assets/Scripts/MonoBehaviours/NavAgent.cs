@@ -18,6 +18,7 @@ namespace Robuzzle
         float rotSpeed = 2.0f;
 
         private RobuzzleGrid grid;
+        private MovableTile tile; //Agent has a movable tile because, it has to block path and also becauseanother agent can move onto it
         int wayPointIndex;
         GameObject currentNode;
         #endregion
@@ -30,10 +31,33 @@ namespace Robuzzle
         {
             WayPointIndex = 0;
             grid = (RobuzzleGrid)RobuzzleGrid.singleton;
+            tile = GetComponent<MovableTile>();
             currentNode = grid.GetNodeOnPosition(Vector3Int.FloorToInt(transform.position - Vector3.up));
         }
 
         private void Update()
+        {
+            if(Input.GetKey(KeyCode.Space))
+            MoveAgent();
+        }
+        #endregion
+        #region Public Methods
+        public void SetDestination(Vector3Int destination)
+        {
+            grid.RemoveTile(tile);
+            currentNode = grid.GetNodeOnPosition(tile.Position - Vector3Int.up);
+            GameObject destinationNode = grid.GetNodeOnPosition(destination);
+            WayPointIndex = 0;
+            if (grid.NavMesh.AStar(currentNode, destinationNode))
+            {
+                Debug.Log("Here da path");
+                grid.NavMesh.printPath();
+                Debug.Log("End da path");
+            }
+            grid.SetTilePosition(tile, tile.Position);
+        }
+
+        public void MoveAgent()
         {
             // If we've nowhere to go then just return
             if (grid.NavMesh.getPathLength() == 0 || WayPointIndex == grid.NavMesh.getPathLength())
@@ -65,16 +89,9 @@ namespace Robuzzle
                                                         Time.deltaTime * rotSpeed);
 
                 // Move the agent
-                this.transform.Translate((goal.position - transform.position).normalized *  speed * Time.deltaTime, Space.World);
+                this.transform.Translate((goal.position - transform.position).normalized * speed * Time.deltaTime, Space.World);
+                tile.UpdatePosition();
             }
-        }
-        #endregion
-        #region Public Methods
-        public void MoveTo(Vector3Int destination)
-        {
-            GameObject destinationNode = grid.GetNodeOnPosition(destination);
-            WayPointIndex = 0;
-            grid.NavMesh.AStar(currentNode, destinationNode);
         }
         #endregion
         #region Private Methods

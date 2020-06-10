@@ -253,16 +253,23 @@ MonoBehaviour:
     right: 0
     front: 0
     back: 0
+    up: 0
+    down: 0
   lowerEnterableSides:
     left: 0
     right: 0
     front: 0
     back: 0
+    up: 0
+    down: 0
+  pathFindingNode: {fileID: 0}
   attachableSides:
     left: 0
     right: 0
     front: 0
     back: 0
+    up: 0
+    down: 0
   automaticSpeed: 0
   MovementAxis: {x: 0, y: 0, z: 1}
 --- !u!54 &49220085
@@ -398,11 +405,16 @@ MonoBehaviour:
     right: 1
     front: 1
     back: 1
+    up: 0
+    down: 0
   lowerEnterableSides:
     left: 0
     right: 0
     front: 0
     back: 0
+    up: 0
+    down: 0
+  pathFindingNode: {fileID: 0}
 --- !u!65 &621262768
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -655,16 +667,23 @@ MonoBehaviour:
     right: 1
     front: 1
     back: 1
+    up: 0
+    down: 0
   lowerEnterableSides:
     left: 0
     right: 0
     front: 0
     back: 0
+    up: 0
+    down: 0
+  pathFindingNode: {fileID: 0}
   attachableSides:
     left: 1
     right: 1
     front: 1
     back: 1
+    up: 0
+    down: 0
 --- !u!65 &827362314
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -777,16 +796,23 @@ MonoBehaviour:
     right: 1
     front: 1
     back: 1
+    up: 0
+    down: 0
   lowerEnterableSides:
     left: 0
     right: 0
     front: 0
     back: 0
+    up: 0
+    down: 0
+  pathFindingNode: {fileID: 0}
   attachableSides:
     left: 1
     right: 1
     front: 1
     back: 1
+    up: 0
+    down: 0
 --- !u!65 &910212307
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -899,16 +925,23 @@ MonoBehaviour:
     right: 1
     front: 1
     back: 1
+    up: 0
+    down: 0
   lowerEnterableSides:
     left: 0
     right: 0
     front: 0
     back: 0
+    up: 0
+    down: 0
+  pathFindingNode: {fileID: 0}
   attachableSides:
     left: 1
     right: 1
     front: 1
     back: 1
+    up: 0
+    down: 0
 --- !u!65 &942491779
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1104,16 +1137,23 @@ MonoBehaviour:
     right: 1
     front: 1
     back: 1
+    up: 0
+    down: 0
   lowerEnterableSides:
     left: 0
     right: 0
     front: 0
     back: 0
+    up: 0
+    down: 0
+  pathFindingNode: {fileID: 0}
   attachableSides:
     left: 1
     right: 1
     front: 1
     back: 1
+    up: 0
+    down: 0
 --- !u!65 &1113073655
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1549,11 +1589,16 @@ MonoBehaviour:
     right: 0
     front: 1
     back: 0
+    up: 0
+    down: 0
   lowerEnterableSides:
     left: 0
     right: 0
     front: 0
     back: 1
+    up: 0
+    down: 0
+  pathFindingNode: {fileID: 0}
 --- !u!4 &1451259054
 Transform:
   m_ObjectHideFlags: 0
@@ -1754,16 +1799,23 @@ MonoBehaviour:
     right: 1
     front: 1
     back: 1
+    up: 0
+    down: 0
   lowerEnterableSides:
     left: 0
     right: 0
     front: 0
     back: 0
+    up: 0
+    down: 0
+  pathFindingNode: {fileID: 0}
   attachableSides:
     left: 1
     right: 1
     front: 1
     back: 1
+    up: 1
+    down: 1
 --- !u!65 &1566745716
 BoxCollider:
   m_ObjectHideFlags: 0

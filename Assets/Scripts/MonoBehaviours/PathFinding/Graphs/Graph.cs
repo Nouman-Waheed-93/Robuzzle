@@ -36,10 +36,21 @@ namespace RobuzzlePathFinding
             //find the node to delete
             Node nodeToDelete = findNode(id);
             //remove all edges that start or end at this node
+            var edgesToDelete = edges.Where(edge => edge.startNode == nodeToDelete || edge.endNode == nodeToDelete);
+            foreach(Edge edge in edgesToDelete)
+            {
+                if (edge.startNode != nodeToDelete)
+                    edge.startNode.edgelist.Remove(edge);
+                else if (edge.endNode != nodeToDelete)
+                    edge.endNode.edgelist.Remove(edge);
+            }
+
+            //TODO : Try removing the edgesToDelete
             edges.RemoveAll(edge => edge.startNode == nodeToDelete || edge.endNode == nodeToDelete);
+
             //delete the node
             nodes.Remove(nodeToDelete);
-        }
+       }
 
         public void AddEdge(GameObject fromNode, GameObject toNode)
         {
@@ -101,6 +112,7 @@ namespace RobuzzlePathFinding
 
         public bool AStar(GameObject startId, GameObject endId)
         {
+            pathList.Clear();
             Node start = findNode(startId);
             Node end = findNode(endId);
 
@@ -131,18 +143,21 @@ namespace RobuzzlePathFinding
 
                 open.RemoveAt(i);
                 closed.Add(thisnode);
+                Debug.Log(thisnode.id.name + " closed");
 
                 Node neighbour;
                 foreach (Edge e in thisnode.edgelist)
                 {
                     neighbour = e.endNode;
-                    neighbour.g = thisnode.g + distance(thisnode, neighbour);
-
+                 //   neighbour.g = thisnode.g + distance(thisnode, neighbour);
                     if (closed.IndexOf(neighbour) > -1)
                         continue;
 
+                    Debug.Log(neighbour.id.name + " is the neighbor");
                     tentative_g_score = thisnode.g + distance(thisnode, neighbour);
 
+                    Debug.Log("Assigned g is " + neighbour.g);
+                    Debug.Log("Tentative g score is " + tentative_g_score);
                     if (open.IndexOf(neighbour) == -1)
                     {
                         open.Add(neighbour);
@@ -160,8 +175,9 @@ namespace RobuzzlePathFinding
                         neighbour.cameFrom = thisnode;
                         neighbour.g = tentative_g_score;
                         //neighbour.h = distance(thisnode,neighbour);
-                        neighbour.h = distance(thisnode, end);
+                        neighbour.h = distance(neighbour, end);
                         neighbour.f = neighbour.g + neighbour.h;
+                        neighbour.UpdateText();
                     }
                 }
 
@@ -189,7 +205,7 @@ namespace RobuzzlePathFinding
             float dx = a.xPos - b.xPos;
             float dy = a.yPos - b.yPos;
             float dz = a.zPos - b.zPos;
-            float dist = dx * dx + dy * dy + dz * dz;
+            float dist = Mathf.Abs(dx) + Mathf.Abs(dy) + Mathf.Abs(dz);
             return (dist);
         }
 
