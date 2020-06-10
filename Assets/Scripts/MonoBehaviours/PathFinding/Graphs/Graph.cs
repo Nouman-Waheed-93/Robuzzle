@@ -143,7 +143,6 @@ namespace RobuzzlePathFinding
 
                 open.RemoveAt(i);
                 closed.Add(thisnode);
-                Debug.Log(thisnode.id.name + " closed");
 
                 Node neighbour;
                 foreach (Edge e in thisnode.edgelist)
@@ -152,12 +151,9 @@ namespace RobuzzlePathFinding
                  //   neighbour.g = thisnode.g + distance(thisnode, neighbour);
                     if (closed.IndexOf(neighbour) > -1)
                         continue;
-
-                    Debug.Log(neighbour.id.name + " is the neighbor");
+                    
                     tentative_g_score = thisnode.g + distance(thisnode, neighbour);
-
-                    Debug.Log("Assigned g is " + neighbour.g);
-                    Debug.Log("Tentative g score is " + tentative_g_score);
+                    
                     if (open.IndexOf(neighbour) == -1)
                     {
                         open.Add(neighbour);
@@ -177,7 +173,6 @@ namespace RobuzzlePathFinding
                         //neighbour.h = distance(thisnode,neighbour);
                         neighbour.h = distance(neighbour, end);
                         neighbour.f = neighbour.g + neighbour.h;
-                        neighbour.UpdateText();
                     }
                 }
 

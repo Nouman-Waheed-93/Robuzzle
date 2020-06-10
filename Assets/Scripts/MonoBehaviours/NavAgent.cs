@@ -48,12 +48,7 @@ namespace Robuzzle
             currentNode = grid.GetNodeOnPosition(tile.Position - Vector3Int.up);
             GameObject destinationNode = grid.GetNodeOnPosition(destination);
             WayPointIndex = 0;
-            if (grid.NavMesh.AStar(currentNode, destinationNode))
-            {
-                Debug.Log("Here da path");
-                grid.NavMesh.printPath();
-                Debug.Log("End da path");
-            }
+            grid.NavMesh.AStar(currentNode, destinationNode);
             grid.SetTilePosition(tile, tile.Position);
         }
 
