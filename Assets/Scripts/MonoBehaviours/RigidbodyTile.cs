@@ -10,6 +10,16 @@ namespace Robuzzle
         #region Variables
         protected Rigidbody rigidbody;
         #endregion
+        #region Properties
+        public Rigidbody GetRigidbody {
+            get
+            {
+                if (rigidbody == null)
+                    rigidbody = GetComponent<Rigidbody>();
+                return rigidbody;
+            }
+        }
+        #endregion
         #region Unity Callbacks
 
         private void Start()
@@ -22,8 +32,10 @@ namespace Robuzzle
         #endregion
         public override void Attach(RigidbodyTile attachTo)
         {
+            Debug.Log("Joint creating");
             FixedJoint joint = gameObject.AddComponent<FixedJoint>();
-            joint.connectedBody = attachTo.rigidbody;
+            joint.connectedBody = attachTo.GetRigidbody;
+            Debug.Log(attachTo.rigidbody != null);
             AddInCompound(attachTo);
         }
         #region Public Methods

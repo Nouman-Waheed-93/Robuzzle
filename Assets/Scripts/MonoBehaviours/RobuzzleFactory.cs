@@ -64,7 +64,7 @@ namespace Robuzzle
             return newTile;
         }
         
-        private void AttachRespectively(RigidbodyTile rbTile, MovableTile neighbor, bool tile2OnNegativeSide)
+        private void JoinNeighbor(RigidbodyTile rbTile, MovableTile neighbor, bool tile2OnNegativeSide)
         {
             RigidbodyTile neighborRigidbodyTile = GetRigidbodyTile(neighbor);// remains same
             if (neighborRigidbodyTile != null) //reamains same
@@ -73,6 +73,7 @@ namespace Robuzzle
                 RigidbodyTile rbTile2;
                 if (tile2OnNegativeSide)
                 {
+                    Debug.Log("On Negative Side");
                     rbTile1 = neighborRigidbodyTile;
                     rbTile2 = rbTile;
                 }
@@ -113,111 +114,82 @@ namespace Robuzzle
         //TODO: Recheck tile type 
         private void JoinNeighbor(RigidbodyTile tile, MovableTile neighbor, SideName side)
         {
+            //the neighbor is on left, down or back side of the tile
             if (side == SideName.left || side == SideName.down || side == SideName.back)
             {
-                RigidbodyTile neighborRigidBbodyTile = GetRigidbodyTile(neighbor);// = neighbor.GetComponentInParent<RigidbodyTile>();
-                if (neighborRigidBbodyTile != null) //if the neighbor tile has a rigidbody on itself, or has one in parent
-                {
-                    if (neighbor.Compound == null) //if neighbor has no compound
-                    {
-                        if (tile.Compound == null) //if tile also has no compound
-                        {
-                            neighborRigidBbodyTile.SetCompound(new TileCompound());
-                        }
-                        else // if tile has a compound, assign it to neighbor
-                        {
-                            neighborRigidBbodyTile.SetCompound(tile.Compound);
-                        }
-                    }
-                    //Now neighbor must have a compound
-                    neighborRigidBbodyTile.Attach(tile);
-                }
-                else //if neighbor is a simple movable tile
-                {
-                    if (tile.Compound == null)
-                        tile.SetCompound(new TileCompound());
-                    neighbor.Attach(tile);
-                    /*
-                     * Simple moving tiles are not connected to their neighbors, 
-                     * until a rigidbody is added in their neighborhood. So, they must 
-                     * attach all their neighbors recursively when a rigidbody is added in neighborhood
-                     * */
-                    JoinNeighbors(neighbor);
-                }
+                JoinNeighbor(tile, neighbor, true);
             }
             else// neighbor is on the right, up or front side of the tile
             {
-                RigidbodyTile neighborRigidBbodyTile = GetRigidbodyTile(neighbor); //neighbor.GetComponentInParent<RigidbodyTile>();
-                if (neighborRigidBbodyTile != null) //if the neighbor tile has a rigidbody on itself, or has one in parent
-                {
-                    if (tile.Compound == null) //if neighbor has no compound
-                    {
-                        if (neighbor.Compound == null) //if tile also has no compound
-                        {
-                            tile.SetCompound(new TileCompound());// neighborRigidBbodyTile.SetCompound(new TileCompound());
-                        }
-                        else // if tile has a compound, assign it to neighbor
-                        {
-                            tile.SetCompound(neighbor.Compound); //neighborRigidBbodyTile.SetCompound(tile.Compound);
-                        }
-                    }
-                    //Now neighbor must have a compound
-                    tile.Attach(neighborRigidBbodyTile); // neighborRigidBbodyTile.Attach(tile);
-                }
-                else //if neighbor is a simple movable tile
-                {
-                    if (tile.Compound == null)
-                        tile.SetCompound(new TileCompound());
-                    neighbor.Attach(tile);
-                    /*
-                     * Simple moving tiles are not connected to their neighbors, 
-                     * until a rigidbody is added in their neighborhood. So, they must 
-                     * attach all their neighbors recursively when a rigidbody is added in neighborhood
-                     * */
-                    JoinNeighbors(neighbor);
-                }
+                JoinNeighbor(tile, neighbor, false);
             }
-
         }
         
+        private void TryJoiningNeighbor(MovableTile tile, Tile neighbor, SideName side)
+        {
+            if (IsMovable(neighbor)) // the neighbor is attachable/movable
+            {
+                MovableTile neighborMovableTile = (MovableTile)neighbor;
+                bool neighborAttachableOnOppositeSide = 
+                    RobuzzleUtilities.IsTileAttachableOnOppositeSide(neighborMovableTile, side);
+
+                if (neighborAttachableOnOppositeSide) //the tile and neighbor can join together
+                {
+                    //if the tile neighbor tile are not already attached
+                    if (!AreAttached(tile, neighborMovableTile))
+                    {
+                        RigidbodyTile RBTile = GetRigidbodyTile(tile);
+                        if (RBTile != null)//If neighbor already has a rigidbody, attach both rigidbodies
+                        {
+                            JoinNeighbor(RBTile, neighborMovableTile, side);
+                        }
+                        else//join simple movable tile with neighbors -> or can that be done somewhere else 
+                        {
+                            RigidbodyTile RBNeighbor = GetRigidbodyTile(neighborMovableTile);
+                            if (RBNeighbor != null)
+                            {
+                                JoinNeighbor(RBNeighbor, tile, RobuzzleUtilities.GetOppositeSide(side)); //this tile is on the left of neighbor
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         private void JoinNeighbors(MovableTile tile)
         {
             //TODO: Make a mechanism to join a simple movable tile to its neighbors
             //join tile on rightside
             if (tile.AttachableSides.right) //if tile can be attached from right side
             {
-                Debug.Log("Attachable on right");
                 Tile rightSideTile = grid.GetTileAtPosition(tile.Position + Vector3Int.right);
-                if (IsMovable(rightSideTile)) // the tile on right side is attachable/movable
-                {
-                    Debug.Log("Right tile is movable");
-                    MovableTile rightMovableTile = (MovableTile)rightSideTile;
-                    if (rightMovableTile.AttachableSides.left) //if right side tile is attachable on left side
-                    {
-                        Debug.Log("Right tile is attachable on left");
-                        //if the tile and right Movable tile are not already attached
-                        if (!AreAttached(tile, rightMovableTile))
-                        {
-                            Debug.Log("Are not attached");
-                            RigidbodyTile RBTile = GetRigidbodyTile(tile);
-                            if (RBTile != null)
-                            {
-                                Debug.Log("Found rigidbody tile on the tile");
-                                JoinNeighbor(RBTile, rightMovableTile, SideName.right);//neighbor is on the right of tile
-                            }
-                            else//join simple movable tile with neighbors -> or can that be done somewhere else 
-                            {
-                                RigidbodyTile RBNeighbor = GetRigidbodyTile(rightMovableTile);
-                                if (RBNeighbor != null)
-                                {
-                                    Debug.Log("Found rigidbody tile on the neighbor");
-                                    JoinNeighbor(RBNeighbor, tile, SideName.left); //this tile is on the left of neighbor
-                                }
-                            }
-                        }
-                    }
-                }
+                TryJoiningNeighbor(tile, rightSideTile, SideName.right);
             }   
+            if (tile.AttachableSides.left)
+            {
+                Tile leftSideTile = grid.GetTileAtPosition(tile.Position + Vector3Int.left);
+                TryJoiningNeighbor(tile, leftSideTile, SideName.left);
+            }
+            if (tile.AttachableSides.front)
+            {
+                Tile frontSideTile = grid.GetTileAtPosition(tile.Position + new Vector3Int(0, 0, 1));
+                TryJoiningNeighbor(tile, frontSideTile, SideName.front);
+            }
+            if (tile.AttachableSides.back)
+            {
+                Tile backSideTile = grid.GetTileAtPosition(tile.Position + new Vector3Int(0, 0, -1));
+                TryJoiningNeighbor(tile, backSideTile, SideName.back);
+            }
+            if (tile.AttachableSides.up)
+            {
+                Tile upperTile = grid.GetTileAtPosition(tile.Position + Vector3Int.up);
+                TryJoiningNeighbor(tile, upperTile, SideName.up);
+            }
+            if (tile.AttachableSides.down)
+            {
+                Tile downSideTile = grid.GetTileAtPosition(tile.Position + Vector3Int.down);
+                TryJoiningNeighbor(tile, downSideTile, SideName.down);
+            }
         }
 
         private bool AreAttached(MovableTile tile1, MovableTile tile2)

@@ -31,6 +31,8 @@ namespace Robuzzle {
 
         public Tile GetTileAtPosition(Vector3Int position)
         {
+            if (!PositionIsInsideGrid(position))
+                return null;
             return tiles[position.x, position.y, position.z];
         }
 
@@ -296,8 +298,16 @@ namespace Robuzzle {
                 }
             }
         }
+     
+        private bool PositionIsInsideGrid(Vector3Int position)
+        {
+            return position.x > -1 && position.x < size.x &&
+                position.y > -1 && position.y < size.y &&
+                position.z > -1 && position.z < size.z;
+        }
         #endregion
         #region DebugMethods
+        
         private void Update()
         {
             graph.debugDraw();

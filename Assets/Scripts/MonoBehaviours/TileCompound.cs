@@ -14,7 +14,6 @@ namespace Robuzzle
 
         #endregion
         #region Methods
-        
         public void Add(MovableTile tile)
         {
             if(!tiles.Contains(tile))
@@ -54,6 +53,28 @@ namespace Robuzzle
         public bool isDraggable()
         {
             return draggables.Count > 0;
+        }
+        
+        public int GetTotalSize()
+        {
+            return tiles.Count + draggables.Count + rigidbodies.Count;
+        }
+
+        public void Integrate(TileCompound otherCompound)
+        {
+            //dragables would not be added because rigidbodies add them
+            //Add all other rigidbodies
+            for(int i = 0; i < otherCompound.rigidbodies.Count; i++)
+            {
+                Add(otherCompound.rigidbodies[i]);
+            }
+
+            //Add all other movable tiles
+            for(int i = 0; i < otherCompound.tiles.Count; i++)
+            {
+                Add(otherCompound.tiles[i]);
+            }
+
         }
         #endregion
         #region Private Methods
