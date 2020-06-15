@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Robuzzle
 {
-    public class Draggable : MovableTile
+    public class Draggable : RigidbodyTile
     {
         #region Methods
         

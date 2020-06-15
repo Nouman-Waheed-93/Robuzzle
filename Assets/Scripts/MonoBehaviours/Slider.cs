@@ -16,7 +16,7 @@ namespace Robuzzle
 
         public override void Run(int direction, float speed)
         {
-            rb.MovePosition(transform.position + MovementAxis * Mathf.Sign(direction) * speed);
+            rigidbody.MovePosition(transform.position + MovementAxis * Mathf.Sign(direction) * speed);
         }
 
         public override void AutomaticMove()

@@ -36,18 +36,16 @@ namespace RobuzzlePathFinding
             //find the node to delete
             Node nodeToDelete = findNode(id);
             //remove all edges that start or end at this node
-            var edgesToDelete = edges.Where(edge => edge.startNode == nodeToDelete || edge.endNode == nodeToDelete);
-            foreach(Edge edge in edgesToDelete)
+            Edge[] edgesToDelete = edges.Where(edge => edge.startNode == nodeToDelete || edge.endNode == nodeToDelete).ToArray();
+            for(int i = 0; i < edgesToDelete.Length; i++)
             {
-                if (edge.startNode != nodeToDelete)
-                    edge.startNode.edgelist.Remove(edge);
-                else if (edge.endNode != nodeToDelete)
-                    edge.endNode.edgelist.Remove(edge);
+                //Remove the edge from the list of outgoing edges the neighbor has to this node
+                if (edgesToDelete[i].startNode != nodeToDelete)
+                    edgesToDelete[i].startNode.edgelist.Remove(edgesToDelete[i]);
+
+                edges.Remove(edgesToDelete[i]);
             }
-
-            //TODO : Try removing the edgesToDelete
-            edges.RemoveAll(edge => edge.startNode == nodeToDelete || edge.endNode == nodeToDelete);
-
+            
             //delete the node
             nodes.Remove(nodeToDelete);
        }
@@ -69,7 +67,7 @@ namespace RobuzzlePathFinding
         {
             Node from = findNode(fromNode);
             Node to = findNode(toNode);
-            edges.RemoveAll(edge => edge.startNode == from && edge.endNode == to);
+            edges.Remove(FindEdge(fromNode, toNode));
         }
 
         public Edge FindEdge(GameObject fromNode, GameObject toNode)
@@ -197,10 +195,11 @@ namespace RobuzzlePathFinding
 
         float distance(Node a, Node b)
         {
-            float dx = a.xPos - b.xPos;
-            float dy = a.yPos - b.yPos;
-            float dz = a.zPos - b.zPos;
-            float dist = Mathf.Abs(dx) + Mathf.Abs(dy) + Mathf.Abs(dz);
+            float dx = Mathf.Abs(a.xPos - b.xPos);
+            //float dy = a.yPos - b.yPos;
+            float dy = 0;
+            float dz = Mathf.Abs(a.zPos - b.zPos);
+            float dist = dx + dy + dz;
             return (dist);
         }
 

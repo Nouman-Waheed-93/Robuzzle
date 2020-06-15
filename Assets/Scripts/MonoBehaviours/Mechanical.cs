@@ -4,14 +4,23 @@ using UnityEngine;
 
 namespace Robuzzle
 {
-    public abstract class Mechanical : MovableTile
+    public abstract class Mechanical : RigidbodyTile
     {
         #region variables
 
         [SerializeField]
         protected float automaticSpeed = 0;
 
-        protected Rigidbody rb;
+        #endregion
+        #region Unity Callbacks
+
+        private void FixedUpdate()
+        {
+            if (compound == null || !compound.isDraggable())
+            {
+                AutomaticMove();
+            }
+        }
 
         #endregion
         #region AbstractMethods
@@ -29,22 +38,6 @@ namespace Robuzzle
          */
         public abstract void AutomaticMove();
 
-        #endregion
-        #region ConcreteMethods
-
-        private void Start()
-        {
-            rb = GetComponent<Rigidbody>();
-        }
-
-        private void FixedUpdate()
-        {
-            if(compound == null || !compound.isDraggable())
-            {
-                AutomaticMove();
-            }
-        }
-        
         #endregion
     }
 }

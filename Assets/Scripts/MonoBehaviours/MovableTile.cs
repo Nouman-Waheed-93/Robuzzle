@@ -19,26 +19,41 @@ namespace Robuzzle
 
         public Sides AttachableSides { get => attachableSides; private set => attachableSides = value; }
 
+        public TileCompound Compound { get => compound; }
+
         #endregion
         #region Events
         public event Action<MovableTile, Vector3Int> PositionChanged;
         #endregion
-        #region Methods
+        #region Public Methods
 
-        public virtual void Attach(TileCompound attachTo)
+        public virtual void Attach(RigidbodyTile attachTo)
         {
             transform.parent = attachTo.transform;
-            compound = attachTo;
+            AddInCompound(attachTo);
         }
 
         public void UpdatePosition()
         {
             //TODO::update the grid
             Vector3Int newPosition = Vector3Int.RoundToInt(transform.position);
-            PositionChanged(this, newPosition);
-            PathFindingNode.transform.position = Position + Vector3Int.up;
+            if (newPosition != Position)
+            {
+                PositionChanged(this, newPosition);
+                PathFindingNode.transform.position = Position + Vector3Int.up;
+            }
         }
 
+        #endregion
+        #region Protected Functions
+        protected void AddInCompound(RigidbodyTile attachTo)
+        {
+            if (attachTo.Compound != null)
+            {
+                compound = attachTo.Compound;
+                compound.Add(this);
+            }
+        }
         #endregion
     }
 }

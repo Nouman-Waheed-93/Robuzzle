@@ -29,6 +29,11 @@ namespace Robuzzle {
             return tiles[position.x, position.y, position.z] != null;
         }
 
+        public Tile GetTileAtPosition(Vector3Int position)
+        {
+            return tiles[position.x, position.y, position.z];
+        }
+
         public GameObject GetNodeOnPosition(Vector3Int position)
         {
             return tiles[position.x, position.y, position.z].PathFindingNode;
@@ -86,7 +91,6 @@ namespace Robuzzle {
                 if (tileBeneath != null)
                 {
                     MakeTileWalkable(tileBeneath);
-//                    SetTilePosition(tileBeneath, tileBeneath.Position); //This will add the pathfindingnodes
                 }
                 //we also want to add paths that go to or come from the tile that is beneath the tile that is beneath this tile
                 else if (position.y - 2 > -1)
@@ -94,16 +98,14 @@ namespace Robuzzle {
                     tileBeneath = tiles[position.x, position.y - 2, position.z];
                     if (tileBeneath != null)
                     {
-                        MakeTileWalkable(tileBeneath);
-                        //    SetTilePosition(tileBeneath, tileBeneath.Position); //This will add the pathfindingnodes
+                        MakeTileWalkable(tileBeneath); 
                     }
                 }
             }
-            Debug.Log("Tile Removed " + position);
         }
         #endregion
         #region Private Methods
-        void CreateGrid()
+        private void CreateGrid()
         {
             tiles = new Tile[size.x, size.y, size.z];
             graph = new Graph();
