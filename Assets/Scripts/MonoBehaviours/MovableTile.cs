@@ -30,7 +30,7 @@ namespace Robuzzle
         public virtual void Attach(RigidbodyTile attachTo)
         {
             transform.parent = attachTo.transform;
-            AddInCompound(attachTo);
+            AddInCompound(attachTo.Compound);
         }
 
         public void UpdatePosition()
@@ -44,15 +44,10 @@ namespace Robuzzle
             }
         }
 
-        #endregion
-        #region Protected Functions
-        protected void AddInCompound(RigidbodyTile attachTo)
+        public void AddInCompound(TileCompound attachTo)
         {
-            if (attachTo.Compound != null)
-            {
-                compound = attachTo.Compound;
-                compound.Add(this);
-            }
+            compound = attachTo;
+            compound.Add(this);
         }
         #endregion
     }

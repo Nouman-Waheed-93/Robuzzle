@@ -16,37 +16,43 @@ namespace Robuzzle
         #region Methods
         public void Add(MovableTile tile)
         {
-            if(!tiles.Contains(tile))
+            if (!tiles.Contains(tile))
+            {
                 tiles.Add(tile);
+                if (tile.GetType() == typeof(RigidbodyTile) || 
+                    tile.GetType().IsSubclassOf(typeof(RigidbodyTile)))
+                    Add((RigidbodyTile)tile);
+            }
         }
 
         public void Remove(MovableTile tile)
         {
-            if(tiles.Contains(tile))
+            if (tiles.Contains(tile))
+            {
                 tiles.Remove(tile);
+                if (tile.GetType() == typeof(RigidbodyTile) ||
+                    tile.GetType().IsSubclassOf(typeof(RigidbodyTile)))
+                    Remove((RigidbodyTile)tile);
+            }
         }
         
-        public void Add(RigidbodyTile rigidbody)
+        private void Add(RigidbodyTile rigidbody)
         {
             if (!rigidbodies.Contains(rigidbody))
             {
                 rigidbodies.Add(rigidbody);
                 if (rigidbody.GetType() == typeof(Draggable))
                     Add((Draggable)rigidbody);
-                else
-                    Add((MovableTile)rigidbody);
             }
         }
 
-        public void Remove(RigidbodyTile rigidbody)
+        private void Remove(RigidbodyTile rigidbody)
         {
             if (rigidbodies.Contains(rigidbody))
             {
                 rigidbodies.Remove(rigidbody);
                 if(rigidbody.GetType() == typeof(Draggable))
                     Remove((Draggable)rigidbody);
-                else
-                    Remove((MovableTile)rigidbody);
             }
         }
 
@@ -62,17 +68,10 @@ namespace Robuzzle
 
         public void Integrate(TileCompound otherCompound)
         {
-            //dragables would not be added because rigidbodies add them
-            //Add all other rigidbodies
-            for(int i = 0; i < otherCompound.rigidbodies.Count; i++)
+            for (int i = 0; i < otherCompound.tiles.Count; i++)
             {
-                Add(otherCompound.rigidbodies[i]);
-            }
-
-            //Add all other movable tiles
-            for(int i = 0; i < otherCompound.tiles.Count; i++)
-            {
-                Add(otherCompound.tiles[i]);
+            //    Debug.Log("Integrating " + otherCompound.tiles[i] tile from other compound");
+                otherCompound.tiles[i].AddInCompound(this);
             }
 
         }
@@ -81,7 +80,7 @@ namespace Robuzzle
 
         private void Add(Draggable draggable)
         {
-            Debug.Log("Ading dragable");
+//            Debug.Log("Ading dragable");
             if (!draggables.Contains(draggable))
             {
                 draggables.Add(draggable);

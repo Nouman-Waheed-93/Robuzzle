@@ -16,6 +16,7 @@ namespace Robuzzle
         [SerializeField]
         Draggable draggable;
 
+        int tileNumber;
         RobuzzleGrid grid;
         #endregion
         #region Unity Callback
@@ -60,20 +61,21 @@ namespace Robuzzle
         private Tile CreateTile(Tile tile, Vector3Int position)
         {
             Tile newTile = Instantiate(tile, position, Quaternion.identity);
+            tileNumber++;
+            newTile.gameObject.name = tile.name + tileNumber;
             grid.SetTilePosition(newTile, position);
             return newTile;
         }
         
         private void JoinNeighbor(RigidbodyTile rbTile, MovableTile neighbor, bool tile2OnNegativeSide)
         {
-            RigidbodyTile neighborRigidbodyTile = GetRigidbodyTile(neighbor);// remains same
-            if (neighborRigidbodyTile != null) //reamains same
+            RigidbodyTile neighborRigidbodyTile = GetRigidbodyTile(neighbor); 
+            if (neighborRigidbodyTile != null) //if the neighbor has rigidbody, or a parent has rigidbody
             {
                 RigidbodyTile rbTile1;
                 RigidbodyTile rbTile2;
                 if (tile2OnNegativeSide)
                 {
-                    Debug.Log("On Negative Side");
                     rbTile1 = neighborRigidbodyTile;
                     rbTile2 = rbTile;
                 }
@@ -83,24 +85,35 @@ namespace Robuzzle
                     rbTile2 = neighborRigidbodyTile;
                 }
 
-                if (rbTile1.Compound == null) //changes
+                /* Before attaching tile1 with tile2 we want to make sure that tile2 has a compound.
+                 * Because, tile1 is added into tile2's cmompound
+                 */
+
+                if (rbTile2.Compound == null) //tile2 has no compound
                 {
-                    if (rbTile2.Compound == null) //changes
+                    if (rbTile1.Compound == null) //tile1 has no compound
                     {
-                        rbTile1.SetCompound(new TileCompound());//changes
+                        rbTile2.AddInCompound(new TileCompound());
                     }
-                    else // if tile has a compound, assign it to neighbor
+                    else // if tile1 has a compound, assign it to tile2
                     {
-                        rbTile1.SetCompound(rbTile2.Compound);//changes
+                        rbTile2.AddInCompound(rbTile1.Compound);
                     }
                 }
-                //changes
+                else if(rbTile1.Compound != null) // if both tiles have compound we will merge the smaller one into bigger one
+                {
+                    if (rbTile2.Compound.GetTotalSize() > rbTile1.Compound.GetTotalSize())
+                        rbTile2.Compound.Integrate(rbTile1.Compound);
+                    else
+                        rbTile1.Compound.Integrate(rbTile2.Compound);
+                }
+                //now rbTile2 must have a compound. Tile1 is added into tile2's compound
                 rbTile1.Attach(rbTile2);
             }
-            else //remains same
+            else // if the neighbor has no rigidbody onitself and on its parent
             {
                 if (rbTile.Compound == null)
-                    rbTile.SetCompound(new TileCompound());
+                    rbTile.AddInCompound(new TileCompound());
                 neighbor.Attach(rbTile);
                 /*
                  * Simple moving tiles are not connected to their neighbors, 
@@ -194,8 +207,10 @@ namespace Robuzzle
 
         private bool AreAttached(MovableTile tile1, MovableTile tile2)
         {
-            return tile1.Compound != null && tile2.Compound != null &&
+            bool retVal = tile1.Compound != null && tile2.Compound != null &&
                             tile1.Compound == tile2.Compound;
+            Debug.Log(tile1.gameObject.name + " and " + tile2.gameObject.name + " Are attached " + retVal);
+            return retVal;
         }
 
         private bool IsMovable(Tile tile)
