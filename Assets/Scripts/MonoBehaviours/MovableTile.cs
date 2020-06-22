@@ -12,7 +12,7 @@ namespace Robuzzle
         [SerializeField]
         Sides attachableSides; // the sides that can be attached to another movable object, so that both act like one object
 
-        protected TileCompound compound;
+        private TileCompound compound;
 
         #endregion
         #region properties
@@ -25,6 +25,14 @@ namespace Robuzzle
         #region Events
         public event Action<MovableTile, Vector3Int> PositionChanged;
         #endregion
+        #region Unity Callbacks
+
+        private void Update()
+        {
+            UpdatePosition();
+        }
+
+        #endregion
         #region Public Methods
 
         public virtual void Attach(RigidbodyTile attachTo)
@@ -32,23 +40,26 @@ namespace Robuzzle
             transform.parent = attachTo.transform;
             AddInCompound(attachTo.Compound);
         }
-
-        public void UpdatePosition()
-        {
-            //TODO::update the grid
-            Vector3Int newPosition = Vector3Int.RoundToInt(transform.position);
-            if (newPosition != Position)
-            {
-                PositionChanged(this, newPosition);
-                PathFindingNode.transform.position = Position + Vector3Int.up;
-            }
-        }
-
+        
         public void AddInCompound(TileCompound attachTo)
         {
             compound = attachTo;
             compound.Add(this);
         }
+        #endregion
+        #region Private Methods
+
+        private void UpdatePosition()
+        {
+            Vector3Int newPosition = Vector3Int.RoundToInt(transform.position);
+            if (newPosition != Position)
+            {
+                PositionChanged(this, newPosition);
+                if(PathFindingNode) //Rails Do not have pathfinding nodes, but their position has to be updated
+                    PathFindingNode.transform.position = Position + Vector3Int.up;
+            }
+        }
+
         #endregion
     }
 }

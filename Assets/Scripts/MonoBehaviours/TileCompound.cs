@@ -11,6 +11,7 @@ namespace Robuzzle
         List<MovableTile> tiles = new List<MovableTile>();
         List<Draggable> draggables = new List<Draggable>();
         List<RigidbodyTile> rigidbodies = new List<RigidbodyTile>();
+        List<Mechanical> mechanicals = new List<Mechanical>();
 
         #endregion
         #region Methods
@@ -36,26 +37,6 @@ namespace Robuzzle
             }
         }
         
-        private void Add(RigidbodyTile rigidbody)
-        {
-            if (!rigidbodies.Contains(rigidbody))
-            {
-                rigidbodies.Add(rigidbody);
-                if (rigidbody.GetType() == typeof(Draggable))
-                    Add((Draggable)rigidbody);
-            }
-        }
-
-        private void Remove(RigidbodyTile rigidbody)
-        {
-            if (rigidbodies.Contains(rigidbody))
-            {
-                rigidbodies.Remove(rigidbody);
-                if(rigidbody.GetType() == typeof(Draggable))
-                    Remove((Draggable)rigidbody);
-            }
-        }
-
         public bool isDraggable()
         {
             return draggables.Count > 0;
@@ -78,13 +59,55 @@ namespace Robuzzle
         #endregion
         #region Private Methods
 
+        private void Add(RigidbodyTile rigidbody)
+        {
+            if (!rigidbodies.Contains(rigidbody))
+            {
+                rigidbodies.Add(rigidbody);
+                if (rigidbody.GetType() == typeof(Draggable))
+                    Add((Draggable)rigidbody);
+                else if(rigidbody.GetType() == typeof(Mechanical))
+                {
+                    Add((Mechanical)rigidbody);
+                }
+            }
+        }
+
+        private void Remove(RigidbodyTile rigidbody)
+        {
+            if (rigidbodies.Contains(rigidbody))
+            {
+                rigidbodies.Remove(rigidbody);
+                if (rigidbody.GetType() == typeof(Draggable))
+                    Remove((Draggable)rigidbody);
+                else if (rigidbody.GetType() == typeof(Mechanical))
+                {
+                    Remove((Mechanical)rigidbody);
+                }
+            }
+        }
+
+        private void Add(Mechanical mechanical)
+        {
+            if (!mechanicals.Contains(mechanical))
+            {
+                mechanicals.Add(mechanical);
+            }
+        }
+
+        private void Remove(Mechanical mechanical)
+        {
+            if (mechanicals.Contains(mechanical))
+            {
+                mechanicals.Remove(mechanical);
+            }
+        }
+
         private void Add(Draggable draggable)
         {
-//            Debug.Log("Ading dragable");
             if (!draggables.Contains(draggable))
             {
                 draggables.Add(draggable);
-                Add((MovableTile)draggable);
             }
         }
 
@@ -93,7 +116,6 @@ namespace Robuzzle
             if (draggables.Contains(draggable))
             {
                 draggables.Remove(draggable);
-                Remove((MovableTile)draggable);
             }
         }
 

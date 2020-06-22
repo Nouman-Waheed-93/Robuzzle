@@ -85,7 +85,6 @@ namespace Robuzzle
 
                 // Move the agent
                 this.transform.Translate((goal.position - transform.position).normalized * speed * Time.deltaTime, Space.World);
-                tile.UpdatePosition();
             }
         }
         #endregion

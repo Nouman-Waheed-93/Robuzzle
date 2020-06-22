@@ -16,7 +16,7 @@ namespace Robuzzle
 
         private void FixedUpdate()
         {
-            if (compound == null || !compound.isDraggable())
+            if (Compound == null || !Compound.isDraggable())
             {
                 AutomaticMove();
             }

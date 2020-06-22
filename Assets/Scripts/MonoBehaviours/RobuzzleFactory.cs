@@ -15,6 +15,10 @@ namespace Robuzzle
         Motor motor;
         [SerializeField]
         Draggable draggable;
+        [SerializeField]
+        Slider sliderLR;
+        [SerializeField]
+        SliderRail railLR;
 
         int tileNumber;
         RobuzzleGrid grid;
@@ -38,6 +42,7 @@ namespace Robuzzle
             if (grid.PositionIsFilled(position))
                 return;
             MovableTile movableTile = (MovableTile)CreateTile(this.movableTile, position);
+            grid.SubscribeTileMovement(movableTile);
             //TODO: JoinToNeighbors
             JoinNeighbors(movableTile);
         }
@@ -47,6 +52,7 @@ namespace Robuzzle
             if (grid.PositionIsFilled(position))
                 return;
             MovableTile movableTile = (MovableTile)CreateTile(draggable, position);
+            grid.SubscribeTileMovement(movableTile);
             JoinNeighbors(movableTile);
         }
 
@@ -55,6 +61,74 @@ namespace Robuzzle
             if (grid.PositionIsFilled(position))
                 return;
             Motor motor = (Motor)CreateTile(this.motor, position);
+        }
+       
+        public void CreateSliderLR(Vector3Int position)
+        {
+            if (grid.PositionIsFilled(position))
+                return;
+
+            MovableTile movableTile = (MovableTile)CreateTile(sliderLR, position);
+            JoinNeighbors(movableTile);
+            
+            grid.SubscribeTileMovement(movableTile);
+            
+            Slider slider = (Slider)movableTile;
+
+            SliderRail rail = CreateRailLR(position);
+            //ignore collision between the rail and slider
+
+            Physics.IgnoreCollision(movableTile.GetComponent<Collider>(), rail.GetComponent<Collider>(), true);
+
+            slider.MinBound = slider.Position;
+            slider.MaxBound = slider.Position;
+            
+            Tile leftTile = grid.GetTileAtPosition(slider.Position + Vector3Int.left);
+            if (leftTile != null && leftTile.GetType() == typeof(SliderRail))
+            {
+                SliderRail leftRail = (SliderRail)leftTile;
+                if (leftRail.AttachableSides.right)
+                    slider.MinBound = GetExtremeBoundNIgnoreCollision(slider, leftRail, SideName.left);
+            }
+
+            //Create a method to end redundancy
+            Tile rightTile = grid.GetTileAtPosition(slider.Position + Vector3Int.right);
+            if (rightTile != null && rightTile.GetType() == typeof(SliderRail))
+            {
+                SliderRail rightRail = (SliderRail)rightTile;
+                if (rightRail.AttachableSides.left)
+                    slider.MaxBound = GetExtremeBoundNIgnoreCollision(slider, rightRail, SideName.right);
+            }
+        }
+
+        public void CreateSliderUD(Vector3Int position)
+        {
+
+        }
+
+        public void CreateSliderBF(Vector3Int position)
+        {
+
+        }
+        
+        public SliderRail CreateRailLR(Vector3Int position)
+        {
+            MovableTile movableTile = (MovableTile)CreateTile(railLR, position);
+            JoinNeighbors(movableTile);
+
+            grid.SubscribeTileMovement(movableTile);
+
+            return (SliderRail)movableTile;
+        }
+
+        public void CreateRailBF(Vector3Int position)
+        {
+
+        }
+
+        public void CreateRailUD(Vector3Int position)
+        {
+
         }
         #endregion
         #region Private Methods
@@ -232,6 +306,42 @@ namespace Robuzzle
                 RBTile = tile.transform.parent.GetComponent<RigidbodyTile>();
             }
             return RBTile;
+        }
+        
+        private Vector3Int GetExtremeBoundNIgnoreCollision(Slider slider, SliderRail rail, SideName side)
+        {
+            Physics.IgnoreCollision(slider.GetComponent<Collider>(), rail.GetComponent<Collider>(), true);
+
+            switch (side)
+            {
+                case SideName.left:
+                    if (rail.AttachableSides.left)
+                    {
+                        Tile leftTile = grid.GetTileAtPosition(rail.Position + Vector3Int.left);
+                        if(leftTile != null && leftTile.GetType() == typeof(SliderRail))
+                        {
+                            SliderRail leftRail = (SliderRail)leftTile;
+                            if (leftRail.AttachableSides.right)
+                                return GetExtremeBoundNIgnoreCollision(slider, leftRail, SideName.left);
+                        }
+                        return rail.Position;
+                    }
+                    break;
+                case SideName.right:
+                    if (rail.AttachableSides.right)
+                    {
+                        Tile rightTile = grid.GetTileAtPosition(rail.Position + Vector3Int.right);
+                        if (rightTile != null && rightTile.GetType() == typeof(SliderRail))
+                        {
+                            SliderRail rightRail = (SliderRail)rightTile;
+                            if (rightRail.AttachableSides.left)
+                                return GetExtremeBoundNIgnoreCollision(slider, rightRail, SideName.right);
+                        }
+                        return rail.Position;
+                    }
+                    break;
+            }
+            return Vector3Int.zero;
         }
         #endregion
     }

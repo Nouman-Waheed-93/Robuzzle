@@ -51,13 +51,18 @@ namespace Robuzzle {
          */
         public void SetTilePosition(Tile tile, Vector3Int position)
         {
-            while (PositionIsFilled(position))
-            {
-                if (position.y < size.y)
-                    position.y++;
-                else
-                    return;
-            }
+            //Dont know why I wrote this code... Delete if everything works fine
+            //     while (PositionIsFilled(position))
+            //    {
+            //         if (position.y < size.y)
+            //             position.y++;
+            //         else
+            //             return;
+            //      }
+
+            //If position is filled do not set tile position
+            if (PositionIsFilled(position))
+                return;
 
             tiles[position.x, position.y, position.z] = tile;
             tile.Position = position;
