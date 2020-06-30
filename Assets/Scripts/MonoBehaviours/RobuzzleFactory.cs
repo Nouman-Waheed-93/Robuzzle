@@ -75,30 +75,13 @@ namespace Robuzzle
             
             Slider slider = (Slider)movableTile;
 
+            slider.MinBound = slider.Position;
+            slider.MaxBound = slider.Position;
+
             SliderRail rail = CreateRailLR(position);
             //ignore collision between the rail and slider
 
             Physics.IgnoreCollision(movableTile.GetComponent<Collider>(), rail.GetComponent<Collider>(), true);
-
-            slider.MinBound = slider.Position;
-            slider.MaxBound = slider.Position;
-            
-            Tile leftTile = grid.GetTileAtPosition(slider.Position + Vector3Int.left);
-            if (leftTile != null && leftTile.GetType() == typeof(SliderRail))
-            {
-                SliderRail leftRail = (SliderRail)leftTile;
-                if (leftRail.AttachableSides.right)
-                    slider.MinBound = GetExtremeBoundNIgnoreCollision(slider, leftRail, SideName.left);
-            }
-
-            //Create a method to end redundancy
-            Tile rightTile = grid.GetTileAtPosition(slider.Position + Vector3Int.right);
-            if (rightTile != null && rightTile.GetType() == typeof(SliderRail))
-            {
-                SliderRail rightRail = (SliderRail)rightTile;
-                if (rightRail.AttachableSides.left)
-                    slider.MaxBound = GetExtremeBoundNIgnoreCollision(slider, rightRail, SideName.right);
-            }
         }
 
         public void CreateSliderUD(Vector3Int position)
@@ -118,6 +101,16 @@ namespace Robuzzle
 
             grid.SubscribeTileMovement(movableTile);
 
+            SliderRail rail = (SliderRail)movableTile;
+            rail.Position = position;
+            //find slider on this movement line
+            Slider slider = GetSliderOnAxis(rail);
+            //set bounds for that slider
+            if (slider)
+            {
+                SetSliderBounds(slider);
+                Debug.Log("Found a slider to fuck with");
+            }
             return (SliderRail)movableTile;
         }
 
@@ -308,6 +301,19 @@ namespace Robuzzle
             return RBTile;
         }
         
+        private void SetSliderBound(Slider slider, Tile tile, SideName side)
+        {
+            if (tile != null && tile.GetType() == typeof(SliderRail))
+            {
+                SliderRail rail = (SliderRail)tile;
+                if (RobuzzleUtilities.IsTileAttachableOnOppositeSide(rail, side))
+                    if (RobuzzleUtilities.IsPositiveSide(side))
+                        slider.MaxBound = GetExtremeBoundNIgnoreCollision(slider, rail, side);
+                    else
+                        slider.MinBound = GetExtremeBoundNIgnoreCollision(slider, rail, side);
+            }
+        }
+
         private Vector3Int GetExtremeBoundNIgnoreCollision(Slider slider, SliderRail rail, SideName side)
         {
             Physics.IgnoreCollision(slider.GetComponent<Collider>(), rail.GetComponent<Collider>(), true);
@@ -342,6 +348,119 @@ namespace Robuzzle
                     break;
             }
             return Vector3Int.zero;
+        }
+     
+        private void SetSliderBounds(Slider slider)
+        {
+            if (!slider.AttachableSides.right) //if a slider is not attachable on right side it means, it moves on x axis
+            {
+                Tile leftTile = grid.GetTileAtPosition(slider.Position + Vector3Int.left);
+                SetSliderBound(slider, leftTile, SideName.left);
+
+                Tile rightTile = grid.GetTileAtPosition(slider.Position + Vector3Int.right);
+                SetSliderBound(slider, rightTile, SideName.right);
+            }
+            else if (!slider.AttachableSides.front) //if a slider is not attachable on front side it means, it moves on z axis
+            {
+                Tile frontTile = grid.GetTileAtPosition(slider.Position + new Vector3Int(0, 0, 1));
+                SetSliderBound(slider, frontTile, SideName.front);
+
+                Tile backTile = grid.GetTileAtPosition(slider.Position + new Vector3Int(0, 0, -1));
+                SetSliderBound(slider, backTile, SideName.back);
+            }
+            else if (!slider.AttachableSides.up) //if a slider is not attachable on up side it means, it moves on y axis
+            {
+                Tile upTile = grid.GetTileAtPosition(slider.Position + Vector3Int.up);
+                SetSliderBound(slider, upTile, SideName.up);
+
+                Tile downTile = grid.GetTileAtPosition(slider.Position + Vector3Int.down);
+                SetSliderBound(slider, downTile, SideName.down);
+            }
+        }
+
+        private Slider GetSliderOnAxis(SliderRail rail)
+        {
+            Slider retSlider = null;
+
+            Tile tile = grid.GetTileAtPosition(rail.Position);
+            bool tileExists = tile != null;
+            Debug.Log("Tile pos " + rail.Position + " is " + tileExists);
+            if (tile.GetType() == typeof(Slider))
+            {
+                return (Slider)tile;
+            }
+
+            if (rail.AttachableSides.left) //if the rail is Left Right oriented
+            {
+                Tile leftTile = grid.GetTileAtPosition(rail.Position + Vector3Int.left);
+
+                retSlider = GetSliderOnTile(leftTile, SideName.left);
+
+                if (retSlider != null)
+                    return retSlider;
+
+                Tile rightTile = grid.GetTileAtPosition(rail.Position + Vector3Int.right);
+
+                retSlider = GetSliderOnTile(rightTile, SideName.right);
+
+                return retSlider;
+            }
+            else if (rail.AttachableSides.back) // if the rail is back front oriented
+            {
+                Tile backTile = grid.GetTileAtPosition(rail.Position + new Vector3Int(0, 0, -1));
+
+                retSlider = GetSliderOnTile(backTile, SideName.back);
+
+                if (retSlider != null)
+                    return retSlider;
+
+                Tile frontTile = grid.GetTileAtPosition(rail.Position + new Vector3Int(0, 0, 1));
+
+                retSlider = GetSliderOnTile(frontTile, SideName.front);
+
+                return retSlider;
+            }
+            else if (rail.AttachableSides.down) // if the rail is up down oriented
+            {
+                Tile downTile = grid.GetTileAtPosition(rail.Position + Vector3Int.down);
+
+                retSlider = GetSliderOnTile(downTile, SideName.down);
+
+                if (retSlider != null)
+                    return retSlider;
+
+                Tile upTile = grid.GetTileAtPosition(rail.Position + Vector3Int.up);
+
+                retSlider = GetSliderOnTile(upTile, SideName.up);
+
+                return retSlider;
+            }
+            return null;
+        }
+
+        private Slider GetSliderOnTile(Tile tile, SideName side)
+        {
+            if (tile != null)
+            {
+                if (tile.GetType() == typeof(Slider))
+                {
+                    Slider slider = (Slider)tile;
+                    //slider moves left/right if left side is not attachable, so it moves on this rail
+                    if (!RobuzzleUtilities.IsTileAttachableOnSide(slider, side))
+                        return slider;
+                }
+                else if (tile.GetType() == typeof(SliderRail))
+                {
+                    SliderRail rail = (SliderRail)tile;
+                    if (RobuzzleUtilities.IsTileAttachableOnOppositeSide(rail, side))
+                    {
+                        return GetSliderOnTile(
+                            grid.GetTileAtPosition(tile.Position + RobuzzleUtilities.GetSideVector(side)),
+                            side);
+                    }
+                }
+            }
+            return null;
         }
         #endregion
     }

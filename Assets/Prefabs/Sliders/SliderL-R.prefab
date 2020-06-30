@@ -127,8 +127,8 @@ MonoBehaviour:
   enterableSides:
     left: 0
     right: 0
-    front: 0
-    back: 0
+    front: 1
+    back: 1
     up: 0
     down: 0
   lowerEnterableSides:

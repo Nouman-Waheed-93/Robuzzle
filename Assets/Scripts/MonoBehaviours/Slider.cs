@@ -31,6 +31,8 @@ namespace Robuzzle
 
         public override void AutomaticMove()
         {
+            if (maxBound == minBound)
+                return;
             //if the slider has reached the end of the grid
             //reverse the direction of the movement
             if(currAutomaticDir == 1 && transform.position == maxBound)

@@ -46,5 +46,52 @@ namespace Robuzzle
             }
             return false;
         }
+
+        public static bool IsTileAttachableOnSide(MovableTile tile, SideName side)
+        {
+            switch (side)
+            {
+                case SideName.right:
+                    return tile.AttachableSides.right;
+                case SideName.left:
+                    return tile.AttachableSides.left;
+                case SideName.front:
+                    return tile.AttachableSides.front;
+                case SideName.back:
+                    return tile.AttachableSides.back;
+                case SideName.up:
+                    return tile.AttachableSides.up;
+                case SideName.down:
+                    return tile.AttachableSides.down;
+            }
+            return false;
+        }
+
+        public static Vector3Int GetSideVector(SideName side)
+        {
+            switch (side)
+            {
+                case SideName.right:
+                    return Vector3Int.right;
+                case SideName.left:
+                    return Vector3Int.left;
+                case SideName.front:
+                    return new Vector3Int(0, 0, 1);
+                case SideName.back:
+                    return new Vector3Int(0, 0, -1);
+                case SideName.up:
+                    return Vector3Int.up;
+                case SideName.down:
+                    return Vector3Int.down;
+            }
+            return Vector3Int.zero;
+        }
+
+        //if a side is right, up, or forward
+        public static bool IsPositiveSide(SideName side)
+        {
+            return side == SideName.right || side == SideName.up || side == SideName.front;
+        }
+
     }
 }
