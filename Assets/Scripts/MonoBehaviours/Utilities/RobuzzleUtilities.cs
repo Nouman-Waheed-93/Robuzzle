@@ -93,5 +93,19 @@ namespace Robuzzle
             return side == SideName.right || side == SideName.up || side == SideName.front;
         }
 
+
+        public static Vector3Int GetPositionUnderCursor()
+        {
+            RaycastHit hit;
+            Vector3Int position = Vector3Int.zero;
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100))
+            {
+                position = Vector3Int.RoundToInt(hit.point);
+                position.y = Mathf.FloorToInt(hit.point.y);
+                position.y += 1;
+            }
+            return position;
+        }
+        
     }
 }

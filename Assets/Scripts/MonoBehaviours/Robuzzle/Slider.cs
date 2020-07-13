@@ -35,11 +35,11 @@ namespace Robuzzle
                 return;
             //if the slider has reached the end of the grid
             //reverse the direction of the movement
-            if(currAutomaticDir == 1 && transform.position == maxBound)
+            if(currAutomaticDir == 1 && transform.position.sqrMagnitude >= maxBound.sqrMagnitude)
             {
                 currAutomaticDir = -1;
             }
-            else if(currAutomaticDir == -1 && transform.position == minBound)
+            else if(currAutomaticDir == -1 && transform.position.sqrMagnitude <= minBound.sqrMagnitude)
             {
                 currAutomaticDir = 1;
             }

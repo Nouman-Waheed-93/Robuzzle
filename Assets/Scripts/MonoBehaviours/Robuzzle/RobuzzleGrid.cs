@@ -4,10 +4,9 @@ using UnityEngine;
 using RobuzzlePathFinding;
 
 namespace Robuzzle {
-    public class RobuzzleGrid : SingletonMonoBehaviour
+    public class RobuzzleGrid : SingletonMonoBehaviour<RobuzzleGrid>
     {
         #region Variables
-        [SerializeField]
         Vector3Int size; // three dimensional size of the grid
 
         Graph graph; //Graph is a mesh used for pathfinding
@@ -20,10 +19,17 @@ namespace Robuzzle {
         private void Awake()
         {
             base.Awake();
-            CreateGrid();
         }
         #endregion
         #region PublicMethods
+
+        public void CreateGrid(Vector3Int size)
+        {
+            this.size = size;
+            tiles = new Tile[size.x, size.y, size.z];
+            graph = new Graph();
+        }
+
         public bool PositionIsFilled(Vector3Int position)
         {
             return tiles[position.x, position.y, position.z] != null;
@@ -78,6 +84,10 @@ namespace Robuzzle {
         public void UpdateTilePosition(MovableTile tile, Vector3Int newPosition)
         {
             RemoveTile(tile);
+            //if new tile position is already filled, remove the tile on that position
+            //this can cause unstability, but for slider movement it works fine
+            if(GetTileAtPosition(newPosition))
+                RemoveTile(GetTileAtPosition(newPosition));
             SetTilePosition(tile, newPosition);
         }
 
@@ -112,12 +122,6 @@ namespace Robuzzle {
         }
         #endregion
         #region Private Methods
-        private void CreateGrid()
-        {
-            tiles = new Tile[size.x, size.y, size.z];
-            graph = new Graph();
-        }
-
         private void MakeTileWalkable(Tile tile)
         {
             Vector3Int position = Vector3Int.RoundToInt(tile.transform.position);
