@@ -32,9 +32,17 @@ namespace Robuzzle.LevelBuilding
             File.WriteAllText(levelDirectory + "/" + name + ".lvl", fileData);
         }
 
-        public void ListLevels()
+        public string[] ListLevels()
         {
-
+            string[] fileNames = Directory.GetFiles(@levelDirectory, "*.lvl");
+            for(int i = 0; i < fileNames.Length; i++)
+            {
+                Debug.Log("Old name " + fileNames[i]);
+                fileNames[i] = fileNames[i].Substring(fileNames[i].LastIndexOf('\\') + 1);
+                fileNames[i] = fileNames[i].Substring(0, fileNames[i].Length - 4);
+                Debug.Log("New name " + fileNames[i]);
+            }
+            return fileNames;
         }
 
         public void DeleteLevel()

@@ -319,7 +319,7 @@ namespace Robuzzle {
         
         private void Update()
         {
-            graph.debugDraw();
+         //   graph.debugDraw();
         }
         #endregion
     }

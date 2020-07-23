@@ -11,8 +11,8 @@ namespace Robuzzle.LevelBuilding
         public LayerMask uiLayerMask;
         public float menuMaxYPos;
         public float menuMinYPos;
+        
         #endregion
-
         #region Public Methods
         public bool PointerOverUI()
         {
@@ -25,9 +25,9 @@ namespace Robuzzle.LevelBuilding
 
         public void SlideTileMenu(float dir)
         {
-            Vector3 newPosition = transform.position;
-            newPosition.z = Mathf.Clamp(newPosition.z + dir, menuMinYPos, menuMaxYPos); 
-            transform.position = newPosition;
+            Vector3 newPosition = transform.localPosition;
+            newPosition.z = Mathf.Clamp(newPosition.z- dir, menuMinYPos, menuMaxYPos); 
+            transform.localPosition = newPosition;
         }       
         #endregion
     }

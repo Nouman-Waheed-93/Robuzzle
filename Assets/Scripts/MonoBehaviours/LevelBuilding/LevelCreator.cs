@@ -12,8 +12,11 @@ namespace Robuzzle.LevelBuilding
         public IntegerGridHandler grid { get; private set; }
         public string name { get; private set; }
         public MenuTile selectedTile { get; private set; }
+        public GameObject currMenu;
         public Material boundaryMaterial;
 
+        [SerializeField]
+        private GameObject mainTileMenu;
         ViewHandler viewHandler;
         #endregion
         #region Public Methods
@@ -24,7 +27,18 @@ namespace Robuzzle.LevelBuilding
             this.name = name;
             CreateVisualBoundaries(size);
             viewHandler = ViewHandler.singleton;
-            viewHandler.SetView((Vector3)size * 0.5f);
+            viewHandler.Init(size);
+        }
+
+        public void HideMainMenu()
+        {
+            mainTileMenu.SetActive(false);
+        }
+
+        public void ToMainTileMenu()
+        {
+            currMenu.SetActive(false);
+            mainTileMenu.SetActive(true);
         }
 
         public void SelectTile(MenuTile tile)
@@ -38,6 +52,10 @@ namespace Robuzzle.LevelBuilding
             {
                 MenuTile tile = Instantiate(selectedTile, position, Quaternion.identity);
                 tile.gameObject.layer = 0;
+                for(int i = 0; i < tile.transform.childCount; i++)
+                {
+                    tile.transform.GetChild(i).gameObject.layer = 0;
+                }
                 tile.transform.localScale = Vector3.one;
                 Destroy(tile);
             }
@@ -65,10 +83,10 @@ namespace Robuzzle.LevelBuilding
             LineRenderer line = boundaryLine.AddComponent<LineRenderer>();
             line.alignment = LineAlignment.TransformZ;
             Vector3[] corners = new Vector3[4];
-            corners[0] = new Vector3(-1, 0, -1);
-            corners[1] = new Vector3(size.x, 0, -1);
-            corners[2] = new Vector3(size.x, 0, size.z);
-            corners[3] = new Vector3(-1, 0, size.z);
+            corners[0] = new Vector3(-1, -0.4f, -1);
+            corners[1] = new Vector3(size.x, -0.4f, -1);
+            corners[2] = new Vector3(size.x, -0.4f, size.z);
+            corners[3] = new Vector3(-1, -0.4f, size.z);
             line.loop = true;
             line.material = boundaryMaterial;
             line.startWidth = 0.2f;

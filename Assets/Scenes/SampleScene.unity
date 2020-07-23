@@ -657,7 +657,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cac82a13a5a19024abc8621cb163d2b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: {x: 10, y: 10, z: 10}
 --- !u!4 &1436949265
 Transform:
   m_ObjectHideFlags: 0
@@ -698,6 +697,7 @@ GameObject:
   - component: {fileID: 1557545794}
   - component: {fileID: 1557545793}
   - component: {fileID: 1557545792}
+  - component: {fileID: 1557545798}
   m_Layer: 0
   m_Name: Motor
   m_TagString: Untagged
@@ -722,7 +722,7 @@ HingeJoint:
     spring: 0
     damper: 0
     targetPosition: 0
-  m_UseMotor: 1
+  m_UseMotor: 0
   m_Motor:
     targetVelocity: 1
     force: 1
@@ -830,6 +830,43 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1557545798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1557545791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb43c3be0888fcc429b1c0a24099a985, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  position: {x: 0, y: 0, z: 0}
+  enterableSides:
+    left: 0
+    right: 0
+    front: 0
+    back: 0
+    up: 0
+    down: 0
+  lowerEnterableSides:
+    left: 0
+    right: 0
+    front: 0
+    back: 0
+    up: 0
+    down: 0
+  pathFindingNode: {fileID: 0}
+  attachableSides:
+    left: 0
+    right: 0
+    front: 0
+    back: 0
+    up: 0
+    down: 0
+  automaticSpeed: 0
+  hingeSide: 0
 --- !u!1 &1742766782
 GameObject:
   m_ObjectHideFlags: 0
@@ -893,8 +930,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edd8e2965eeaed842a2b8688af09e7af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  agent: {fileID: 0}
   fixedTile: {fileID: 3147874491594358612, guid: 3eaf52cfec067a1489a8f6b6094f111c,
     type: 3}
+  stairLR: {fileID: 0}
+  stairRL: {fileID: 0}
+  stairBF: {fileID: 0}
+  stairFB: {fileID: 0}
   movableTile: {fileID: 9178313138216119382, guid: c2ee739e464f96746861bb7ae99737cc,
     type: 3}
   motor: {fileID: 0}

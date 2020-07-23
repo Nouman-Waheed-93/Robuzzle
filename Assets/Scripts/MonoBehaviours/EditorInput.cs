@@ -6,34 +6,35 @@ using Robuzzle.LevelBuilding;
 
 namespace Robuzzle
 {
-    public class EditorInput : MonoBehaviour
+    public class EditorInput : AbstractInput
     {
         #region Variables
         LevelCreatorUI ui;
-        ViewHandler viewHandler;
         LevelCreator levelCreator;
-
-        Vector3 LastMousePosition;
+        bool clickStartedOnPanel;
         #endregion
 
         #region Unity Callbacks
         private void Start()
         {
+            base.Start();
             ui = FindObjectOfType<LevelCreatorUI>();
-            viewHandler = (ViewHandler)ViewHandler.singleton;
             levelCreator = (LevelCreator)LevelCreator.singleton;
         }
 
         void Update()
         {
+            GetPointerPosDelta();
             if (PanView()) { }
             else if (RotateView()) { }
             else if (ZoomView()) { }
-            else if (ui.PointerOverUI()) { }
+            else if (ui.PointerOverUI()) { SlideTilePanel(); }
             else if (GetClick()) { }
+            if (DragPanel()) { }
         }
         #endregion
         #region Private Methods
+        
         private bool GetClick()
         {
             if (EventSystem.current.IsPointerOverGameObject())
@@ -51,59 +52,30 @@ namespace Robuzzle
             return false;
         }
 
-        //return true if view is panning
-        private bool PanView()
+        private bool DragPanel()
         {
-            if (Input.GetKeyDown(KeyCode.LeftAlt))
+            if (clickStartedOnPanel && Input.GetMouseButton(0))
             {
-                LastMousePosition = Input.mousePosition;
+                ui.SlideTileMenu(pointerDeltaPos.y * Time.deltaTime);
                 return true;
             }
-            else if (Input.GetKey(KeyCode.LeftAlt))
+            else if(clickStartedOnPanel && Input.GetMouseButtonUp(0))
             {
-                viewHandler.PanView(GetMousePositionDelta() * Time.deltaTime);
-                return true;
+                clickStartedOnPanel = false;
             }
             return false;
         }
 
-        private bool RotateView()
+        private bool SlideTilePanel()
         {
-            if (Input.GetKeyDown(KeyCode.LeftControl))
+            if (Input.GetMouseButtonDown(0))
             {
-                LastMousePosition = Input.mousePosition;
-                return true;
-            }
-            else if (Input.GetKey(KeyCode.LeftControl))
-            {
-                viewHandler.RotateView(GetMousePositionDelta().x * Time.deltaTime);
+                clickStartedOnPanel = true;
                 return true;
             }
             return false;
         }
-
-        private bool ZoomView()
-        {
-            if (Input.GetKeyDown(KeyCode.LeftShift))
-            {
-                LastMousePosition = Input.mousePosition;
-                return true;
-            }
-            else if (Input.GetKey(KeyCode.LeftShift))
-            {
-                viewHandler.ZoomView(GetMousePositionDelta().y * Time.deltaTime);
-                return true;
-            }
-            return false;
-        }
-
-        private Vector3 GetMousePositionDelta()
-        {
-            Vector3 delta = LastMousePosition - Input.mousePosition;
-            LastMousePosition = Input.mousePosition;
-            return delta;
-        }
-        #endregion
+       #endregion
 
     }
 }

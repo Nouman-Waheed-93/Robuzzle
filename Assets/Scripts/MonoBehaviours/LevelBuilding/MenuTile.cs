@@ -11,6 +11,8 @@ namespace Robuzzle.LevelBuilding
         public Vector3 normalSize = new Vector3(1, 1, 1);
         public TileInteger tileType;
 
+        [SerializeField]
+        private GameObject SubTypeMenu;
         private LevelCreator levelCreator;
         private ViewHandler viewHandler;
         #endregion
@@ -27,12 +29,27 @@ namespace Robuzzle.LevelBuilding
             SelectTile();
         }
         #endregion
+        #region Public Methods
+        public void ToggleTileMenu()
+        {
+            if (SubTypeMenu)
+            {
+                SubTypeMenu.SetActive(!SubTypeMenu.activeSelf);
+                levelCreator.HideMainMenu();
+            }
+        }
+        #endregion
         #region Private Methods
         private void SelectTile()
         {
             if (levelCreator.selectedTile != null)
+            {
                 levelCreator.selectedTile.ToNormalSize();
+            }
             levelCreator.SelectTile(this);
+            if(SubTypeMenu)
+                levelCreator.currMenu = SubTypeMenu;
+            levelCreator.selectedTile.ToggleTileMenu();
             levelCreator.selectedTile.ToBigSize();
         }
 
@@ -48,7 +65,9 @@ namespace Robuzzle.LevelBuilding
 
         private void Rotate(Quaternion rotation)
         {
-            transform.localRotation = rotation;
+            Vector3 eulers = rotation.eulerAngles;
+            eulers.y = -eulers.y;
+            transform.localRotation = Quaternion.Euler(eulers);
         }
         #endregion
     }

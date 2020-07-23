@@ -12,9 +12,27 @@ namespace Robuzzle
         [SerializeField]
         Tile fixedTile;
         [SerializeField]
+        Tile stairLR;
+        [SerializeField]
+        Tile stairRL;
+        [SerializeField]
+        Tile stairBF;
+        [SerializeField]
+        Tile stairFB;
+        [SerializeField]
         MovableTile movableTile;
         [SerializeField]
-        Motor motor;
+        Motor motorL;
+        [SerializeField]
+        Motor motorR;
+        [SerializeField]
+        Motor motorB;
+        [SerializeField]
+        Motor motorF;
+        [SerializeField]
+        Motor motorD;
+        [SerializeField]
+        Motor motorU;
         [SerializeField]
         Draggable draggable;
         [SerializeField]
@@ -64,7 +82,35 @@ namespace Robuzzle
             //TODO: JoinToNeighbors
             JoinNeighbors(movableTile);
         }
+        #region Stair Methods
+        public void CreateStairLR(Vector3Int position)
+        {
+            if (grid.PositionIsFilled(position))
+                return;
+            CreateTile(stairLR, position);
+        }
+        
+        public void CreateStairBF(Vector3Int position)
+        {
+            if (grid.PositionIsFilled(position))
+                return;
+            CreateTile(stairBF, position);
+        }
 
+        public void CreateStairRL(Vector3Int position)
+        {
+            if (grid.PositionIsFilled(position))
+                return;
+            CreateTile(stairRL, position);
+        }
+
+        public void CreateStairFB(Vector3Int position)
+        {
+            if (grid.PositionIsFilled(position))
+                return;
+            CreateTile(stairFB, position);
+        }
+        #endregion
         public void CreateDraggable(Vector3Int position)
         {
             if (grid.PositionIsFilled(position))
@@ -74,11 +120,14 @@ namespace Robuzzle
             JoinNeighbors(movableTile);
         }
 
-        public void CreateMotor(Vector3Int position)
+        public void CreateLMotor(Vector3Int position)
         {
             if (grid.PositionIsFilled(position))
                 return;
-            Motor motor = (Motor)CreateTile(this.motor, position);
+            Motor motor = (Motor)CreateTile(this.motorL, position);
+            JoinNeighbors(movableTile);
+
+            grid.SubscribeTileMovement(motor);
         }
        
         public void CreateSliderLR(Vector3Int position)
