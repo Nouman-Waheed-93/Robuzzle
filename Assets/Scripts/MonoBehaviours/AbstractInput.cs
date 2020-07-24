@@ -8,7 +8,7 @@ namespace Robuzzle
     {
         #region Variables
         ViewHandler viewHandler;
-        IInputHandler inputHandler;
+        protected IInputHandler inputHandler;
         protected Vector3 pointerDeltaPos;
         #endregion
         #region Unity Callbacks

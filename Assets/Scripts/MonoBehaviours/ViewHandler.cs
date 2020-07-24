@@ -34,7 +34,8 @@ namespace Robuzzle
         public void RotateView(float dir)
         {
             parent.Rotate(0, dir, 0);
-            ViewRotated.Invoke(parent.rotation);
+            if(ViewRotated != null)
+                ViewRotated.Invoke(parent.rotation);
             if (!movingToCenter)
             {
                 StartCoroutine("MoveToCenter");

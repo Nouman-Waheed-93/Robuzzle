@@ -10,10 +10,12 @@ namespace Robuzzle.LevelBuilding
         public static string levelName = "chonda";
         RobuzzleFactory factory;
         LevelFileHandler fileHandler;
+        ViewHandler viewHandler;
         #endregion
         // Start is called before the first frame update
         void Start()
         {
+            viewHandler = ViewHandler.singleton;
             factory = GetComponent<RobuzzleFactory>();
             fileHandler = new LevelFileHandler();
             Invoke("LoadLevel", 0.1f);
@@ -26,6 +28,7 @@ namespace Robuzzle.LevelBuilding
                 string levelString = fileHandler.LoadLevel(levelName);
                 IntegerGrid levelData = JsonUtility.FromJson<IntegerGrid>(levelString);
                 RobuzzleGrid.singleton.CreateGrid(levelData.size);
+                viewHandler.Init(levelData.size);
                 foreach(PositionTile tileData in levelData.tiles)
                 {
                     switch ((TileInteger)tileData.tile)

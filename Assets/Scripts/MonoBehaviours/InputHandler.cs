@@ -5,11 +5,14 @@ using UnityEngine;
 namespace Robuzzle {
     public interface IInputHandler
     {
+        bool BtnDown();
+        bool BtnUp();
         bool IsTapped();
         bool IsSingleDragging();
         bool IsDoubleDragging();
         bool IsPinchZooming();
         Vector3 GetPointerPosDelta();
+        Vector3 GetPointerPosition();
     }
 
     public class TouchInputHandler : IInputHandler
@@ -18,6 +21,28 @@ namespace Robuzzle {
         float touchHoldTimer;
         Vector3 pointerDelta;
         #endregion
+
+        public Vector3 GetPointerPosition()
+        {
+            Vector3 returnVal = Vector3.zero;
+            if(Input.touchCount == 1)
+                returnVal = Input.GetTouch(0).position;
+            return returnVal;
+        }
+
+        public bool BtnDown()
+        {
+            if (Input.touchCount == 1)
+                return Input.GetTouch(0).phase == TouchPhase.Began;
+            return false;
+        }
+
+        public bool BtnUp()
+        {
+            if(Input.touchCount == 1)
+                return Input.GetTouch(0).phase == TouchPhase.Ended;
+            return false;
+        }
 
         public bool IsTapped()
         {
@@ -94,11 +119,28 @@ namespace Robuzzle {
     public class MouseInputHandler : IInputHandler
     {
         #region Variables
+        float clickHold;
         Vector3 lastMousePosition;
         Vector3 positionDelta;
         #endregion
         
         #region Methods
+
+        public Vector3 GetPointerPosition()
+        {
+            return Input.mousePosition;
+        }
+
+        public bool BtnDown()
+        {
+            return Input.GetMouseButtonDown(0);
+        }
+
+        public bool BtnUp()
+        {
+            return Input.GetMouseButtonUp(0);
+        }
+
         public Vector3 GetPointerPosDelta()
         {
             positionDelta = lastMousePosition - Input.mousePosition;
@@ -135,7 +177,18 @@ namespace Robuzzle {
 
         public bool IsTapped()
         {
-            return Input.GetMouseButtonDown(0);
+            if (Input.GetMouseButton(0))
+            {
+                clickHold += Time.deltaTime;
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                bool tap = clickHold < 0.2f;
+                clickHold = 0;
+                return tap;
+            }
+            return false;
         }
         #endregion
     }

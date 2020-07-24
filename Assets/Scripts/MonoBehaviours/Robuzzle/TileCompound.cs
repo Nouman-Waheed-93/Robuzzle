@@ -15,12 +15,32 @@ namespace Robuzzle
 
         #endregion
         #region Methods
+        public List<Mechanical> GetMechanicals()
+        {
+            return mechanicals;
+        }
+
+        public List<RigidbodyTile> GetRigidbodies()
+        {
+            return rigidbodies;
+        }
+
+        public List<Draggable> GetDraggables()
+        {
+            return draggables;
+        }
+
+        public List<MovableTile> GetAllTiles()
+        {
+            return tiles;
+        }
+
         public void Add(MovableTile tile)
         {
             if (!tiles.Contains(tile))
             {
                 tiles.Add(tile);
-                if (tile.GetType() == typeof(RigidbodyTile) || 
+                if (tile.GetType() == typeof(RigidbodyTile) ||
                     tile.GetType().IsSubclassOf(typeof(RigidbodyTile)))
                     Add((RigidbodyTile)tile);
             }
@@ -66,10 +86,8 @@ namespace Robuzzle
                 rigidbodies.Add(rigidbody);
                 if (rigidbody.GetType() == typeof(Draggable))
                     Add((Draggable)rigidbody);
-                else if(rigidbody.GetType() == typeof(Mechanical))
-                {
-                    Add((Mechanical)rigidbody);
-                }
+                else if (rigidbody.GetType() == typeof(Mechanical) || rigidbody.GetType().IsSubclassOf(typeof(Mechanical)))
+                   Add((Mechanical)rigidbody);
             }
         }
 
