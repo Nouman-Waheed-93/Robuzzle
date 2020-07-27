@@ -52,7 +52,7 @@ namespace Robuzzle.LevelBuilding
         #endregion
     }
     
-    public class IntegerGridHandler
+    public class IntegerGridHandler : IGrid
     {
         #region Variables
         public IntegerGrid grid {get; private set; }
@@ -85,20 +85,19 @@ namespace Robuzzle.LevelBuilding
                 grid.tiles.Remove((PositionTile)grid.tiles.Where(tile => tile.position == position));
             }
         }
-        #endregion
-        #region Private Methods
-        private bool PositionIsInsideGrid(Vector3Int position)
+
+        public bool PositionIsFilled(Vector3Int position)
+        {
+            var tileVar = from pTile in grid.tiles where pTile.position.Equals(position) select pTile;
+            return tileVar.FirstOrDefault<PositionTile>() != null;
+        }
+
+        public bool PositionIsInsideGrid(Vector3Int position)
         {
             return position.x >= 0 && position.y >= 0 && position.z >= 0
                 && position.x < grid.size.x && position.y < grid.size.y && position.z < grid.size.z;
         }
 
-        private bool PositionIsFilled(Vector3Int position)
-        {
-            var tileVar = from pTile in grid.tiles where pTile.position.Equals(position) select pTile;
-            return tileVar.FirstOrDefault<PositionTile>() != null;
-        }
         #endregion
-
     }
 }

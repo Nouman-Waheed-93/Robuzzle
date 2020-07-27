@@ -148,7 +148,7 @@ namespace Robuzzle
             SliderRail rail = CreateRailLR(position);
             //ignore collision between the rail and slider
 
-            Physics.IgnoreCollision(movableTile.GetComponent<Collider>(), rail.GetComponent<Collider>(), true);
+            Physics.IgnoreCollision(movableTile.transform.GetChild(0).GetComponent<Collider>(), rail.transform.GetChild(0).GetComponent<Collider>(), true);
         }
 
         public void CreateSliderUD(Vector3Int position)
@@ -169,7 +169,7 @@ namespace Robuzzle
             SliderRail rail = CreateRailUD(position);
             //ignore collision between the rail and slider
 
-            Physics.IgnoreCollision(movableTile.GetComponent<Collider>(), rail.GetComponent<Collider>(), true);
+            Physics.IgnoreCollision(movableTile.transform.GetChild(0).GetComponent<Collider>(), rail.transform.GetChild(0).GetComponent<Collider>(), true);
         }
 
         public void CreateSliderBF(Vector3Int position)
@@ -191,7 +191,7 @@ namespace Robuzzle
             SliderRail rail = CreateRailBF(position);
             //ignore collision between the rail and slider
 
-            Physics.IgnoreCollision(movableTile.GetComponent<Collider>(), rail.GetComponent<Collider>(), true);
+            Physics.IgnoreCollision(movableTile.transform.GetChild(0).GetComponent<Collider>(), rail.transform.GetChild(0).GetComponent<Collider>(), true);
         }
         
         public SliderRail CreateRailLR(Vector3Int position)
@@ -437,7 +437,7 @@ namespace Robuzzle
 
         private Vector3Int GetExtremeBoundNIgnoreCollision(Slider slider, SliderRail rail, SideName side)
         {
-            Physics.IgnoreCollision(slider.GetComponent<Collider>(), rail.GetComponent<Collider>(), true);
+            Physics.IgnoreCollision(slider.transform.GetChild(0).GetComponent<Collider>(), rail.transform.GetChild(0).GetComponent<Collider>(), true);
 
             if(RobuzzleUtilities.IsTileAttachableOnSide(rail, side))
             {

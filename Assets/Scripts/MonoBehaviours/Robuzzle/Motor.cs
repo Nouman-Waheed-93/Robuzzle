@@ -24,7 +24,10 @@ namespace Robuzzle
 
         public override void Run(int direction, float speed)
         {
-            motor.targetVelocity =  Mathf.Sign(direction) * speed;
+            Vector3 rotation = transform.rotation.eulerAngles;
+            Vector3 deltaRot = (Vector3)(RobuzzleUtilities.GetSideVector(hingeSide)) * -direction * speed * automaticSpeed;
+            Quaternion qRotation = Quaternion.Euler(rotation) * Quaternion.Euler(deltaRot);
+            rigidbody.MoveRotation(qRotation);
         }
 
         public override void AutomaticMove()

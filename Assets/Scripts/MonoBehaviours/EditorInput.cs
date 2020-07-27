@@ -9,6 +9,7 @@ namespace Robuzzle
     public class EditorInput : AbstractInput
     {
         #region Variables
+        Camera cam;
         LevelCreatorUI ui;
         LevelCreator levelCreator;
         bool clickStartedOnPanel;
@@ -19,6 +20,7 @@ namespace Robuzzle
         {
             base.Start();
             ui = FindObjectOfType<LevelCreatorUI>();
+            cam = Camera.main;
             levelCreator = (LevelCreator)LevelCreator.singleton;
         }
 
@@ -41,12 +43,12 @@ namespace Robuzzle
                 return false;
             if (Input.GetMouseButtonDown(0))
             {
-                ((LevelCreator)LevelCreator.singleton).PlaceTile(RobuzzleUtilities.GetPositionUnderCursor());
+                levelCreator.PlaceTile(RobuzzleUtilities.GetEmptyPositionUnderCursor(cam, levelCreator.grid));
                 return true;
             }
             else if (Input.GetMouseButtonDown(1))
             {
-                ((LevelCreator)LevelCreator.singleton).DeleteTile(RobuzzleUtilities.GetPositionUnderCursor());
+                levelCreator.DeleteTile(RobuzzleUtilities.GetEmptyPositionUnderCursor(cam, levelCreator.grid));
                 return true;
             }
             return false;

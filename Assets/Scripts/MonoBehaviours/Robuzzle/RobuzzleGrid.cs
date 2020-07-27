@@ -4,7 +4,7 @@ using UnityEngine;
 using RobuzzlePathFinding;
 
 namespace Robuzzle {
-    public class RobuzzleGrid : SingletonMonoBehaviour<RobuzzleGrid>
+    public class RobuzzleGrid : SingletonMonoBehaviour<RobuzzleGrid>, IGrid
     {
         #region Variables
         Vector3Int size; // three dimensional size of the grid
@@ -119,6 +119,13 @@ namespace Robuzzle {
                     }
                 }
             }
+        }
+        
+        public bool PositionIsInsideGrid(Vector3Int position)
+        {
+            return position.x > -1 && position.x < size.x &&
+                position.y > -1 && position.y < size.y &&
+                position.z > -1 && position.z < size.z;
         }
         #endregion
         #region Private Methods
@@ -308,12 +315,6 @@ namespace Robuzzle {
             }
         }
      
-        private bool PositionIsInsideGrid(Vector3Int position)
-        {
-            return position.x > -1 && position.x < size.x &&
-                position.y > -1 && position.y < size.y &&
-                position.z > -1 && position.z < size.z;
-        }
         #endregion
         #region DebugMethods
         

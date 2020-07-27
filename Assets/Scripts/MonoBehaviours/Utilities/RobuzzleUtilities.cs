@@ -94,17 +94,48 @@ namespace Robuzzle
         }
 
 
-        public static Vector3Int GetPositionUnderCursor()
+        public static Vector3Int GetTilePositionUnderCursor(Camera cam, IGrid grid)
         {
+            float checkIncrement = 0.25f;
             RaycastHit hit;
-            Vector3Int position = Vector3Int.zero;
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100))
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit, 100))
             {
-                position = Vector3Int.RoundToInt(hit.point);
-                position.y = Mathf.FloorToInt(hit.point.y);
-                position.y += 1;
+                float reach = hit.distance - checkIncrement;
+                while (reach >= checkIncrement)
+                {
+                    Vector3Int checkPosition = Vector3Int.RoundToInt(ray.GetPoint(reach));
+                    if (grid.PositionIsInsideGrid(checkPosition) && !grid.PositionIsFilled(checkPosition))
+                    {
+                        checkPosition = Vector3Int.RoundToInt(ray.GetPoint(reach += checkIncrement));
+                        return checkPosition;
+                    }
+                    reach -= checkIncrement;
+                }
             }
-            return position;
+            return -Vector3Int.one;
+        }
+
+        public static Vector3Int GetEmptyPositionUnderCursor(Camera cam, IGrid grid)
+        {
+            float checkIncrement = 0.25f;
+            RaycastHit hit;
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit, 100))
+            {
+                float reach = hit.distance - checkIncrement;
+                while(reach >= checkIncrement)
+                {
+                    Vector3Int checkPosition = Vector3Int.RoundToInt(ray.GetPoint(reach));
+                    if (grid.PositionIsInsideGrid(checkPosition) && !grid.PositionIsFilled(checkPosition))
+                    {
+                        return checkPosition;
+                    }
+
+                    reach -= checkIncrement;
+                }
+            }
+            return -Vector3Int.one;
         }
         
     }
