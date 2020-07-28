@@ -26,7 +26,16 @@ namespace Robuzzle
 
         public override void Run(int direction, float speed)
         {
-            rigidbody.MovePosition(transform.position + MovementAxis * Mathf.Sign(direction) * speed * Time.fixedDeltaTime);
+            //           rigidbody.MovePosition(transform.position + MovementAxis * Mathf.Sign(direction) * speed * Time.fixedDeltaTime);
+            Debug.DrawRay(transform.position, MovementAxis * Mathf.Sign(direction) * speed, Color.red);
+            rigidbody.AddRelativeForce(MovementAxis * Mathf.Sign(direction) * speed);
+        }
+
+        public override void MovePosition(Vector3 position, Draggable draggable)
+        {
+            Vector3 toPosition = position - transform.position;
+            Debug.DrawRay(transform.position, toPosition, Color.red);
+            rigidbody.AddRelativeForce(toPosition);
         }
 
         public override void AutomaticMove()

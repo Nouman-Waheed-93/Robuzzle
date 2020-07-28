@@ -11,23 +11,23 @@ namespace Robuzzle
         Vector3 targetPosition;
         bool dragging;
         #endregion
+        //debug
+        Transform debugTarget;
+
         #region Unity Callbacks
 
         private void Start()
         {
             mechanical = Compound.GetMechanicals()[0];
+            debugTarget = (new GameObject("Debug" + name)).transform;
         }
 
         private void FixedUpdate()
         {
             if (!dragging)
                 return;
-            Vector3 direction = targetPosition - transform.position;
-          //  mechanical.MovePosition(direction);
-            direction.Normalize();
-            if (direction.magnitude != 0)
-                mechanical.Run(Mathf.RoundToInt((direction.x + direction.y + direction.z)), 1);
-            //            rigidbody.AddForce(-transform.forward * 10, ForceMode.Acceleration);
+
+            mechanical.MovePosition(targetPosition, this);
         }
 
         #endregion
@@ -41,6 +41,7 @@ namespace Robuzzle
 
         public void Move(Vector3 targetPosition)
         {
+            debugTarget.position = targetPosition;
             this.targetPosition = targetPosition;
         }
 

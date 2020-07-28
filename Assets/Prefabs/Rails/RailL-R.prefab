@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7059994483029500566}
   - component: {fileID: 7607290222109657949}
   - component: {fileID: 5796214571672680123}
-  - component: {fileID: 513459166997422910}
+  - component: {fileID: 3486911759385598086}
   m_Layer: 0
   m_Name: Rail
   m_TagString: Untagged
@@ -80,7 +80,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &513459166997422910
+--- !u!65 &3486911759385598086
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -91,7 +91,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.40740037, y: 0.40740037, z: 2}
+  m_Size: {x: 0.20370023, y: 0.20370018, z: 1.0000002}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5797260444440184349
 GameObject:

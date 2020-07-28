@@ -35,7 +35,7 @@ namespace Robuzzle
         /*
          * Run the machine to move it in the position
          * */
-        public abstract void MovePosition(Vector3 position);
+        public abstract void MovePosition(Vector3 position, Draggable draggable);
 
         /*
          * Run the machine automatically with no player input involved. 

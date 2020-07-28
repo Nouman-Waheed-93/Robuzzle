@@ -24,12 +24,18 @@ namespace Robuzzle
 
         public override void Run(int direction, float speed)
         {
-            Vector3 rotation = transform.rotation.eulerAngles;
-            Vector3 deltaRot = (Vector3)(RobuzzleUtilities.GetSideVector(hingeSide)) * -direction * speed * automaticSpeed;
-            Quaternion qRotation = Quaternion.Euler(rotation) * Quaternion.Euler(deltaRot);
-            rigidbody.MoveRotation(qRotation);
+
         }
 
+        public override void MovePosition(Vector3 position, Draggable draggable)
+        {
+            Vector3 fromPosition = (draggable.transform.position - transform.position).normalized;
+            Vector3 toPosition = (position - transform.position).normalized;
+            Vector3 rotationVector = Vector3.Cross(fromPosition, toPosition).normalized;
+
+            rigidbody.AddTorque(rotationVector, ForceMode.VelocityChange);
+        }
+        
         public override void AutomaticMove()
         {
 
@@ -37,6 +43,7 @@ namespace Robuzzle
 
         private void SetUpMotor()
         {
+            rigidbody.maxAngularVelocity = automaticSpeed;
             joint = GetComponent<HingeJoint>();
             motor = joint.motor;
             JoinAnchor();
