@@ -15,10 +15,13 @@ namespace Robuzzle
         private JointMotor motor;
         #endregion
         #region Unity Callbacks
+
         private void Start()
         {
-            SetUpMotor();
+            base.Start();
+            JoinAnchor();
         }
+
         #endregion
         #region Methods
 
@@ -38,24 +41,10 @@ namespace Robuzzle
         
         public override void AutomaticMove()
         {
-
-        }
-
-        private void SetUpMotor()
-        {
             rigidbody.maxAngularVelocity = automaticSpeed;
-            joint = GetComponent<HingeJoint>();
-            motor = joint.motor;
-            JoinAnchor();
-            if (Compound == null || !Compound.isDraggable())
-            {
-                joint.useMotor = true;
-                motor.force = automaticSpeed;
-                motor.targetVelocity = automaticSpeed;
-                joint.motor = motor;
-            }
+            rigidbody.AddTorque(RobuzzleUtilities.GetSideVector(hingeSide), ForceMode.VelocityChange);
         }
-
+        
         private void JoinAnchor()
         {
             Tile otherTile = RobuzzleGrid.singleton.GetTileAtPosition(Position + RobuzzleUtilities.GetSideVector(hingeSide));

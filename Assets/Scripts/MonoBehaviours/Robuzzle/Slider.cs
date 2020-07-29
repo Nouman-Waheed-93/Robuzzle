@@ -9,6 +9,9 @@ namespace Robuzzle
         #region Variables
 
         [SerializeField]
+        float EndStayTime = 1; //the time for which the slider will stop before changing direction when it reaches its end
+
+        [SerializeField]
         Vector3 MovementAxis;
 
         [SerializeField]
@@ -16,6 +19,7 @@ namespace Robuzzle
         [SerializeField]
         Vector3 maxBound;
 
+        float endTimeCounter;
         int currAutomaticDir = 1; //current automatic movement direction
         #endregion
         #region Properties
@@ -26,16 +30,14 @@ namespace Robuzzle
 
         public override void Run(int direction, float speed)
         {
-            //           rigidbody.MovePosition(transform.position + MovementAxis * Mathf.Sign(direction) * speed * Time.fixedDeltaTime);
-            Debug.DrawRay(transform.position, MovementAxis * Mathf.Sign(direction) * speed, Color.red);
-            rigidbody.AddRelativeForce(MovementAxis * Mathf.Sign(direction) * speed);
+            rigidbody.AddRelativeForce(MovementAxis * Mathf.Sign(direction) * speed, ForceMode.VelocityChange);
         }
 
         public override void MovePosition(Vector3 position, Draggable draggable)
         {
             Vector3 toPosition = position - transform.position;
             Debug.DrawRay(transform.position, toPosition, Color.red);
-            rigidbody.AddRelativeForce(toPosition);
+            rigidbody.AddRelativeForce(toPosition, ForceMode.VelocityChange);
         }
 
         public override void AutomaticMove()
@@ -44,13 +46,33 @@ namespace Robuzzle
                 return;
             //if the slider has reached the end of the grid
             //reverse the direction of the movement
-            if(currAutomaticDir == 1 && transform.position.sqrMagnitude >= maxBound.sqrMagnitude)
+
+            Debug.Log(Vector3.Dot(transform.position, MovementAxis) + " the fuckin dot " + Vector3.Dot(MaxBound, MovementAxis) + " the feckd dot " + currAutomaticDir);
+
+            float sliderPosition = Vector3.Dot(transform.position, MovementAxis);
+            float maxPosition = Vector3.Dot(MaxBound, MovementAxis);
+            float maxDifference = Mathf.Abs(sliderPosition - maxPosition);
+
+            float minPosition = Vector3.Dot(MinBound, MovementAxis);
+            float minDifference = Mathf.Abs(sliderPosition - minPosition);
+
+            if (currAutomaticDir == 1 && maxDifference < 0.02f)
             {
-                currAutomaticDir = -1;
+                endTimeCounter += Time.deltaTime;
+                if (endTimeCounter >= EndStayTime)
+                {
+                    endTimeCounter = 0;
+                    currAutomaticDir = -1;
+                }
             }
-            else if(currAutomaticDir == -1 && transform.position.sqrMagnitude <= minBound.sqrMagnitude)
+            else if(currAutomaticDir == -1 && minDifference < 0.02f)
             {
-                currAutomaticDir = 1;
+                endTimeCounter += Time.deltaTime;
+                if (endTimeCounter >= EndStayTime)
+                {
+                    endTimeCounter = 0;
+                    currAutomaticDir = 1;
+                }
             }
             Run(currAutomaticDir, automaticSpeed);
         }

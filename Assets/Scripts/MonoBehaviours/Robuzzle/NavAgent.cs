@@ -37,7 +37,6 @@ namespace Robuzzle
 
         private void Update()
         {
-            if(Input.GetKey(KeyCode.Space))
             MoveAgent();
         }
         #endregion

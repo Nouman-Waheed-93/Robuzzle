@@ -22,7 +22,7 @@ namespace Robuzzle
         #endregion
         #region Unity Callbacks
 
-        private void Start()
+        protected void Start()
         {
             rigidbody = GetComponent<Rigidbody>();
         }

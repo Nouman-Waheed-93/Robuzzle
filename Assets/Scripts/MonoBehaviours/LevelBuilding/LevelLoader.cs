@@ -36,6 +36,9 @@ namespace Robuzzle.LevelBuilding
                         case TileInteger.RedRobo:
                             factory.CreateAgent(tileData.position);
                             break;
+                        case TileInteger.YelloWRobo:
+                            factory.CreateAgent(tileData.position);
+                            break;
                         #region Simple Tiles
                         case TileInteger.WoodenTile:
                             factory.CreateMovableTile(tileData.position);
@@ -81,7 +84,22 @@ namespace Robuzzle.LevelBuilding
                         case TileInteger.LMotor:
                             factory.CreateLMotor(tileData.position);
                             break;
-                        #endregion
+                        case TileInteger.RMotor:
+                            factory.CreateRMotor(tileData.position);
+                            break;
+                        case TileInteger.BMotor:
+                            factory.CreateBMotor(tileData.position);
+                            break;
+                        case TileInteger.FMotor:
+                            factory.CreateFMotor(tileData.position);
+                            break;
+                        case TileInteger.DMotor:
+                            factory.CreateDMotor(tileData.position);
+                            break;
+                        case TileInteger.UMotor:
+                            factory.CreateUMotor(tileData.position);
+                            break;
+                            #endregion
                     }
                 }
             }

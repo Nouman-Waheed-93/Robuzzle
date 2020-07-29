@@ -120,6 +120,7 @@ namespace Robuzzle
             JoinNeighbors(movableTile);
         }
 
+        #region Motor Methods
         public void CreateLMotor(Vector3Int position)
         {
             if (grid.PositionIsFilled(position))
@@ -129,7 +130,58 @@ namespace Robuzzle
 
             grid.SubscribeTileMovement(motor);
         }
-       
+
+        public void CreateRMotor(Vector3Int position)
+        {
+            if (grid.PositionIsFilled(position))
+                return;
+            Motor motor = (Motor)CreateTile(this.motorR, position);
+            JoinNeighbors(movableTile);
+
+            grid.SubscribeTileMovement(motor);
+        }
+
+        public void CreateBMotor(Vector3Int position)
+        {
+            if (grid.PositionIsFilled(position))
+                return;
+            Motor motor = (Motor)CreateTile(this.motorB, position);
+            JoinNeighbors(movableTile);
+
+            grid.SubscribeTileMovement(motor);
+        }
+
+        public void CreateFMotor(Vector3Int position)
+        {
+            if (grid.PositionIsFilled(position))
+                return;
+            Motor motor = (Motor)CreateTile(this.motorF, position);
+            JoinNeighbors(movableTile);
+
+            grid.SubscribeTileMovement(motor);
+        }
+
+        public void CreateDMotor(Vector3Int position)
+        {
+            if (grid.PositionIsFilled(position))
+                return;
+            Motor motor = (Motor)CreateTile(this.motorD, position);
+            JoinNeighbors(movableTile);
+
+            grid.SubscribeTileMovement(motor);
+        }
+
+        public void CreateUMotor(Vector3Int position)
+        {
+            if (grid.PositionIsFilled(position))
+                return;
+            Motor motor = (Motor)CreateTile(this.motorU, position);
+            JoinNeighbors(movableTile);
+
+            grid.SubscribeTileMovement(motor);
+        }
+        #endregion
+
         public void CreateSliderLR(Vector3Int position)
         {
             if (grid.PositionIsFilled(position))
