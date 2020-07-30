@@ -24,18 +24,16 @@ namespace Robuzzle
 
         #endregion
         #region AbstractMethods
-
-        /*
-         * Run the machine, negative direction value would run the machine in reverse
-         * and positive direction value would run the machine in forward.
-         */
-        public abstract void Run(int direction, float speed);
-
-
+        
         /*
          * Run the machine to move it in the position
          * */
         public abstract void MovePosition(Vector3 position, Draggable draggable);
+
+        /*
+         * Automatically snaps to the closest position or rotation
+         * */
+        public abstract void MoveToDiscretePosition(Draggable draggable);
 
         /*
          * Run the machine automatically with no player input involved. 

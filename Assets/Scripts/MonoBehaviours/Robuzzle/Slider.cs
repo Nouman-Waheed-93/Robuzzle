@@ -27,17 +27,17 @@ namespace Robuzzle
         public Vector3 MaxBound { get => maxBound; set => maxBound = value; }
         #endregion
         #region Methods
-
-        public override void Run(int direction, float speed)
-        {
-            rigidbody.AddRelativeForce(MovementAxis * Mathf.Sign(direction) * speed, ForceMode.VelocityChange);
-        }
-
+        
         public override void MovePosition(Vector3 position, Draggable draggable)
         {
             Vector3 toPosition = position - transform.position;
-            Debug.DrawRay(transform.position, toPosition, Color.red);
+
             rigidbody.AddRelativeForce(toPosition, ForceMode.VelocityChange);
+        }
+
+        public override void MoveToDiscretePosition(Draggable draggable)
+        {
+            MovePosition(Position, null);
         }
 
         public override void AutomaticMove()
@@ -74,7 +74,8 @@ namespace Robuzzle
                     currAutomaticDir = 1;
                 }
             }
-            Run(currAutomaticDir, automaticSpeed);
+
+            rigidbody.AddRelativeForce(MovementAxis * Mathf.Sign(currAutomaticDir) * automaticSpeed, ForceMode.VelocityChange);
         }
 
         #endregion

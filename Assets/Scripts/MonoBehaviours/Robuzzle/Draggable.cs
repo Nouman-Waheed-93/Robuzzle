@@ -24,10 +24,10 @@ namespace Robuzzle
 
         private void FixedUpdate()
         {
-            if (!dragging)
-                return;
-
-            mechanical.MovePosition(targetPosition, this);
+            if (dragging)
+                mechanical.MovePosition(targetPosition, this);
+            else
+                mechanical.MoveToDiscretePosition(this);
         }
 
         #endregion

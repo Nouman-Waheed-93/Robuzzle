@@ -44,6 +44,9 @@ namespace Robuzzle {
 
         public GameObject GetNodeOnPosition(Vector3Int position)
         {
+            Tile tile = tiles[position.x, position.y, position.z];
+            if (tile == null)
+                return null;
             return tiles[position.x, position.y, position.z].PathFindingNode;
         }
 
@@ -57,17 +60,8 @@ namespace Robuzzle {
          */
         public void SetTilePosition(Tile tile, Vector3Int position)
         {
-            //Dont know why I wrote this code... Delete if everything works fine
-            //     while (PositionIsFilled(position))
-            //    {
-            //         if (position.y < size.y)
-            //             position.y++;
-            //         else
-            //             return;
-            //      }
-
             //If position is filled do not set tile position
-            if (PositionIsFilled(position))
+            if (!PositionIsInsideGrid(position) || PositionIsFilled(position))
                 return;
 
             tiles[position.x, position.y, position.z] = tile;
