@@ -57,7 +57,7 @@ namespace Robuzzle
         {
             boundary = levelSize + (Vector3.one * 3);
             Vector3 midPoint = levelSize * 0.5f;
-            parentCenterPosition = new Vector3(midPoint.x, parent.position.y, midPoint.z);
+            parentCenterPosition = new Vector3(midPoint.x, midPoint.y * 3, midPoint.z);
             parent.position = parentCenterPosition;
         }
 

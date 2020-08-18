@@ -31,8 +31,8 @@ namespace Robuzzle
         public override void MovePosition(Vector3 position, Draggable draggable)
         {
             Vector3 toPosition = position - transform.position;
-
-            rigidbody.AddRelativeForce(toPosition, ForceMode.VelocityChange);
+            float Amt = Vector3.Dot(toPosition, MovementAxis);
+            rigidbody.AddRelativeForce(MovementAxis * Amt, ForceMode.VelocityChange);
         }
 
         public override void MoveToDiscretePosition(Draggable draggable)
@@ -46,8 +46,6 @@ namespace Robuzzle
                 return;
             //if the slider has reached the end of the grid
             //reverse the direction of the movement
-
-            Debug.Log(Vector3.Dot(transform.position, MovementAxis) + " the fuckin dot " + Vector3.Dot(MaxBound, MovementAxis) + " the feckd dot " + currAutomaticDir);
 
             float sliderPosition = Vector3.Dot(transform.position, MovementAxis);
             float maxPosition = Vector3.Dot(MaxBound, MovementAxis);

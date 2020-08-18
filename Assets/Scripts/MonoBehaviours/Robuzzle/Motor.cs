@@ -14,13 +14,17 @@ namespace Robuzzle
         private HingeJoint joint;
         private JointMotor motor;
         private Vector3 hingeVector;
+        private Vector3 perpendicularVector; // perpendicular to the hinge Vector
+        private PIDController motorPID;
         #endregion
         #region Unity Callbacks
 
         private void Start()
         {
             base.Start();
+            motorPID = new PIDController();
             hingeVector = RobuzzleUtilities.GetSideVector(hingeSide);
+            perpendicularVector = RobuzzleUtilities.GetPerpendicularSideVector(hingeSide);
             JoinAnchor();
         }
 
@@ -31,14 +35,28 @@ namespace Robuzzle
         {
             Vector3 fromPosition = (draggable.transform.position - transform.position).normalized;
             Vector3 toPosition = (position - transform.position).normalized;
-            Vector3 rotationVector = Vector3.Cross(fromPosition, toPosition);
+
+            float fromHingeDot = Vector3.Dot(fromPosition, hingeVector); //we calculate dot product between hingeVector and fromPosition and...
+            fromPosition = fromPosition - (hingeVector * fromHingeDot); //...subtract it from the from Position, so that fromPosition is a perpendicular rotation to hinge
+            float toHingeDot = Vector3.Dot(toPosition, hingeVector); // same thing as above two lines
+            toPosition = toPosition - (hingeVector * toHingeDot);
+
+            Debug.DrawRay(transform.position, fromPosition, Color.red);
+            Debug.DrawRay(transform.position, toPosition, Color.cyan);
+
+            float fromAngle = Vector3.SignedAngle(fromPosition, perpendicularVector, -hingeVector);
+            float toAngle = Vector3.SignedAngle(toPosition, perpendicularVector, -hingeVector);
             
-            rigidbody.AddTorque(rotationVector, ForceMode.VelocityChange);
+            float Amt = motorPID.SeekAngle(toAngle, fromAngle);
+            rigidbody.AddTorque(hingeVector * Amt, ForceMode.VelocityChange);
         }
 
         public override void MoveToDiscretePosition(Draggable draggable)
         {
             Vector3 draggableDir = (draggable.transform.position - transform.position).normalized;
+            float draggableDot = Vector3.Dot(draggableDir, hingeVector);
+            draggableDir = draggableDir - (hingeVector * draggableDot);
+
             Vector3[] Sides = new Vector3[6];
             Sides[0] = Vector3.left;
             Sides[1] = Vector3.right;
@@ -65,7 +83,6 @@ namespace Robuzzle
                         smallestAngleIndex = i;
                 }
             }
-            Debug.Log("Moving " + Sides[smallestAngleIndex]);
             MovePosition(transform.position + Sides[smallestAngleIndex], draggable);
         }
 

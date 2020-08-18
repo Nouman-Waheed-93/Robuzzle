@@ -443,7 +443,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edd8e2965eeaed842a2b8688af09e7af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agent: {fileID: -4824038000635498868, guid: 806a2038bed71a846ab6c12f14a49bae, type: 3}
+  agent: {fileID: -7529956332594844708, guid: 806a2038bed71a846ab6c12f14a49bae, type: 3}
   fixedTile: {fileID: 3147874491594358612, guid: 3eaf52cfec067a1489a8f6b6094f111c,
     type: 3}
   stairLR: {fileID: 6201541154185085019, guid: ca780f089bff7c5498dc7dfce3074339, type: 3}

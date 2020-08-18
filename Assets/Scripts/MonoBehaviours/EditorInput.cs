@@ -48,7 +48,8 @@ namespace Robuzzle
             }
             else if (Input.GetMouseButtonDown(1))
             {
-                levelCreator.DeleteTile(RobuzzleUtilities.GetEmptyPositionUnderCursor(cam, levelCreator.grid));
+                levelCreator.DeleteTile(RobuzzleUtilities.GetTilePositionUnderCursor(cam, levelCreator.grid));
+                Destroy(RobuzzleUtilities.GetGameObjectUnderCursor(cam));
                 return true;
             }
             return false;

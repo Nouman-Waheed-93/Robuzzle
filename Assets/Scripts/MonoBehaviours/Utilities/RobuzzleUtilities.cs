@@ -87,6 +87,27 @@ namespace Robuzzle
             return Vector3Int.zero;
         }
 
+        // Any perpendicular axis to the Vector
+        public static Vector3Int GetPerpendicularSideVector(SideName side)
+        {
+            switch (side)
+            {
+                case SideName.right:
+                    return Vector3Int.up;
+                case SideName.left:
+                    return Vector3Int.down;
+                case SideName.front:
+                    return Vector3Int.right;
+                case SideName.back:
+                    return Vector3Int.left;
+                case SideName.up:
+                    return Vector3Int.right;
+                case SideName.down:
+                    return Vector3Int.left;
+            }
+            return Vector3Int.zero;
+        }
+
         //if a side is right, up, or forward
         public static bool IsPositiveSide(SideName side)
         {
@@ -96,24 +117,25 @@ namespace Robuzzle
 
         public static Vector3Int GetTilePositionUnderCursor(Camera cam, IGrid grid)
         {
-            float checkIncrement = 0.25f;
             RaycastHit hit;
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit, 100))
             {
-                float reach = hit.distance - checkIncrement;
-                while (reach >= checkIncrement)
-                {
-                    Vector3Int checkPosition = Vector3Int.RoundToInt(ray.GetPoint(reach));
-                    if (grid.PositionIsInsideGrid(checkPosition) && !grid.PositionIsFilled(checkPosition))
-                    {
-                        checkPosition = Vector3Int.RoundToInt(ray.GetPoint(reach += checkIncrement));
-                        return checkPosition;
-                    }
-                    reach -= checkIncrement;
-                }
+                return Vector3Int.RoundToInt(hit.collider.transform.position);
             }
             return -Vector3Int.one;
+        }
+
+
+        public static GameObject GetGameObjectUnderCursor(Camera cam)
+        {
+            RaycastHit hit;
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit, 100))
+            {
+                return hit.collider.gameObject;
+            }
+            return null;
         }
 
         public static Vector3Int GetEmptyPositionUnderCursor(Camera cam, IGrid grid)

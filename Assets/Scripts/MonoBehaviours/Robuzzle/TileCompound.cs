@@ -12,6 +12,9 @@ namespace Robuzzle
         List<Draggable> draggables = new List<Draggable>();
         List<RigidbodyTile> rigidbodies = new List<RigidbodyTile>();
         List<Mechanical> mechanicals = new List<Mechanical>();
+        Draggable draggableLastControlled;
+
+        public Draggable DraggableLastControlled { get => draggableLastControlled; set => draggableLastControlled = value; }
 
         #endregion
         #region Methods
@@ -29,12 +32,12 @@ namespace Robuzzle
         {
             return draggables;
         }
-
+        
         public List<MovableTile> GetAllTiles()
         {
             return tiles;
         }
-
+        
         public void Add(MovableTile tile)
         {
             if (!tiles.Contains(tile))

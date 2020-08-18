@@ -79,6 +79,12 @@ namespace Robuzzle.LevelBuilding
                         case TileInteger.LRStair:
                             factory.CreateStairLR(tileData.position);
                             break;
+                        case TileInteger.FBStair:
+                            factory.CreateStairFB(tileData.position);
+                            break;
+                        case TileInteger.RLStair:
+                            factory.CreateStairRL(tileData.position);
+                            break;
                         #endregion
                         #region Motors
                         case TileInteger.LMotor:

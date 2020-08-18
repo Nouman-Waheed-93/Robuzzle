@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.Characters.ThirdPerson;
 
 namespace Robuzzle
 {
@@ -16,9 +17,20 @@ namespace Robuzzle
         // agent rotation speed
         [SerializeField]
         float rotSpeed = 2.0f;
-
+        // height that agent will maintain from ground
+        [SerializeField]
+        float standHeight = 0.2f;
+        // the bottom to cast raycast for allevation
+        [SerializeField]
+        Transform bottom;
+        //the force to apply to elevate agent4
+        [SerializeField]
+        Vector3 elevationForce;
+        
+        private PIDController heightPID;
         private RobuzzleGrid grid;
-        private MovableTile tile; //Agent has a movable tile because, it has to block path and also becauseanother agent can move onto it
+        private RigidbodyTile tile; //Agent has a movable tile because, it has to block path and also becauseanother agent can move onto it
+        private Rigidbody rigidbody;
         int wayPointIndex;
         GameObject currentNode;
         #endregion
@@ -30,12 +42,15 @@ namespace Robuzzle
         private void Start()
         {
             WayPointIndex = 0;
+            heightPID = new PIDController();
             grid = (RobuzzleGrid)RobuzzleGrid.singleton;
-            tile = GetComponent<MovableTile>();
+            tile = GetComponent<RigidbodyTile>();
+            rigidbody = GetComponent<Rigidbody>();
             currentNode = grid.GetNodeOnPosition(Vector3Int.FloorToInt(transform.position - Vector3.up));
+            rigidbody.centerOfMass = new Vector3(0, -10, 0);
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             MoveAgent();
         }
@@ -66,28 +81,31 @@ namespace Robuzzle
                 transform.position) < accuracy)
             {
                 WayPointIndex++;
+           //     charController.Move(Vector3.zero, false, false);
             }
 
             //if we are not at the end of the path
             if (WayPointIndex < grid.NavMesh.getPathLength())
             {
                 Transform goal = grid.NavMesh.getPathPoint(WayPointIndex).transform;
-                Vector3 lookAtGoal = new Vector3(goal.position.x,
-                                                this.transform.position.y,
-                                                goal.position.z);
-                Vector3 direction = lookAtGoal - this.transform.position;
+                Vector3 direction = goal.position - this.transform.position;
 
-                // Rotate towards the heading
-                this.transform.rotation = Quaternion.Slerp(this.transform.rotation,
-                                                        Quaternion.LookRotation(direction),
-                                                        Time.deltaTime * rotSpeed);
-
-                // Move the agent
-                this.transform.Translate((goal.position - transform.position).normalized * speed * Time.deltaTime, Space.World);
+                rigidbody.velocity = direction.normalized;
             }
         }
         #endregion
         #region Private Methods
+
+        private void StandUpRight()
+        {
+            Ray ray = new Ray(bottom.position, Vector3.down);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, standHeight))
+            {
+                float forcePercent = heightPID.Seek(standHeight, hit.distance);
+                rigidbody.AddForce(elevationForce * forcePercent);
+            }
+        }
 
         #endregion
     }

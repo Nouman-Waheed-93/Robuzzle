@@ -11,23 +11,23 @@ namespace Robuzzle
         Vector3 targetPosition;
         bool dragging;
         #endregion
-        //debug
-        Transform debugTarget;
-
+        
         #region Unity Callbacks
 
         private void Start()
         {
             mechanical = Compound.GetMechanicals()[0];
-            debugTarget = (new GameObject("Debug" + name)).transform;
         }
 
         private void FixedUpdate()
         {
-            if (dragging)
-                mechanical.MovePosition(targetPosition, this);
-            else
-                mechanical.MoveToDiscretePosition(this);
+            if (Compound.DraggableLastControlled == this)
+            {
+                if (dragging)
+                    mechanical.MovePosition(targetPosition, this);
+                else
+                    mechanical.MoveToDiscretePosition(this);
+            }
         }
 
         #endregion
@@ -36,19 +36,30 @@ namespace Robuzzle
         public void StartDrag()
         {
             Debug.Log("Started drag");
-            dragging = true;
+            Compound.DraggableLastControlled = this;
+            CompoundDragging(true);
+            //    dragging = true;
         }
 
         public void Move(Vector3 targetPosition)
         {
-            debugTarget.position = targetPosition;
             this.targetPosition = targetPosition;
         }
 
         public void EndDrag()
         {
             Debug.Log("Ended drag");
-            dragging = false;
+            CompoundDragging(false);
+//            dragging = false;
+        }
+
+        void CompoundDragging(bool dragging)
+        {
+            List<Draggable> otherDraggables = Compound.GetDraggables();
+            for(int i = 0; i < otherDraggables.Count; i++)
+            {
+                otherDraggables[i].dragging = dragging;
+            }
         }
 
         #endregion

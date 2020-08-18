@@ -80,9 +80,10 @@ namespace Robuzzle.LevelBuilding
 
         public void DeleteTile(Vector3Int position)
         {
-            if (PositionIsInsideGrid(position))
+            Debug.Log("Delete Position " + position);
+            if (PositionIsInsideGrid(position) && PositionIsFilled(position))
             {
-                grid.tiles.Remove((PositionTile)grid.tiles.Where(tile => tile.position == position));
+                grid.tiles.Remove(grid.tiles.Where(tile => tile.position == position).First());
             }
         }
 
