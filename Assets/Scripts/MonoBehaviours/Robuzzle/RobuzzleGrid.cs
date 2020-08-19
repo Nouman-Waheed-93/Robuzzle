@@ -129,7 +129,7 @@ namespace Robuzzle {
             //Add the tile position in graph if it is not there already
             if (tile.PathFindingNode == null)
             {
-                GameObject pathFindingNode = new GameObject("node " + DebugTileCreator.tileNumber);
+                GameObject pathFindingNode = new GameObject("node");
                 pathFindingNode.transform.position = position + Vector3Int.up;
                 tile.PathFindingNode = pathFindingNode;
             }

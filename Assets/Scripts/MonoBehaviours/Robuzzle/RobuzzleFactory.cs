@@ -2,51 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Robuzzle
+namespace Robuzzle.LevelBuilding
 {
     public class RobuzzleFactory : MonoBehaviour
     {
         #region Variables
         [SerializeField]
-        MovableTile agent;
-        [SerializeField]
-        Tile fixedTile;
-        [SerializeField]
-        Tile stairLR;
-        [SerializeField]
-        Tile stairRL;
-        [SerializeField]
-        Tile stairBF;
-        [SerializeField]
-        Tile stairFB;
-        [SerializeField]
-        MovableTile movableTile;
-        [SerializeField]
-        Motor motorL;
-        [SerializeField]
-        Motor motorR;
-        [SerializeField]
-        Motor motorB;
-        [SerializeField]
-        Motor motorF;
-        [SerializeField]
-        Motor motorD;
-        [SerializeField]
-        Motor motorU;
-        [SerializeField]
-        Draggable draggable;
-        [SerializeField]
-        Slider sliderLR; //slider that moves on x axis
-        [SerializeField]
-        SliderRail railLR;// rail on x axis
-        [SerializeField]
-        Slider sliderBF; //slider that moves on z axis
-        [SerializeField]
-        SliderRail railBF; //rail on z axis
-        [SerializeField]
-        Slider sliderDU; //slider that moves on y axis
-        [SerializeField]
-        SliderRail railDU; //slider that moves on y axis
+        TileTypes tileTypes;
 
         int tileNumber;
         RobuzzleGrid grid;
@@ -62,6 +24,7 @@ namespace Robuzzle
         {
             if (grid.PositionIsFilled(position))
                 return;
+            Tile fixedTile = tileTypes.GetPrefab(TileInteger.StoneTile);
             CreateTile(fixedTile, position);
         }
 
@@ -69,6 +32,7 @@ namespace Robuzzle
         {
             if (grid.PositionIsFilled(position))
                 return;
+            Tile agent = tileTypes.GetPrefab(TileInteger.YelloWRobo);
             MovableTile movableTile = (MovableTile)CreateTile(agent, position);
             grid.SubscribeTileMovement(movableTile);
         }
@@ -77,7 +41,8 @@ namespace Robuzzle
         {
             if (grid.PositionIsFilled(position))
                 return;
-            MovableTile movableTile = (MovableTile)CreateTile(this.movableTile, position);
+            Tile movableTilePrefab = tileTypes.GetPrefab(TileInteger.WoodenTile);
+            MovableTile movableTile = (MovableTile)CreateTile(movableTilePrefab, position);
             grid.SubscribeTileMovement(movableTile);
             //TODO: JoinToNeighbors
             JoinNeighbors(movableTile);
@@ -87,6 +52,7 @@ namespace Robuzzle
         {
             if (grid.PositionIsFilled(position))
                 return;
+            Tile stairLR = tileTypes.GetPrefab(TileInteger.LRStair);
             CreateTile(stairLR, position);
         }
         
@@ -94,6 +60,8 @@ namespace Robuzzle
         {
             if (grid.PositionIsFilled(position))
                 return;
+
+            Tile stairBF = tileTypes.GetPrefab(TileInteger.BFStair);
             CreateTile(stairBF, position);
         }
 
@@ -101,6 +69,8 @@ namespace Robuzzle
         {
             if (grid.PositionIsFilled(position))
                 return;
+
+            Tile stairRL = tileTypes.GetPrefab(TileInteger.RLStair);
             CreateTile(stairRL, position);
         }
 
@@ -108,6 +78,8 @@ namespace Robuzzle
         {
             if (grid.PositionIsFilled(position))
                 return;
+
+            Tile stairFB = tileTypes.GetPrefab(TileInteger.FBStair);
             CreateTile(stairFB, position);
         }
         #endregion
@@ -115,6 +87,7 @@ namespace Robuzzle
         {
             if (grid.PositionIsFilled(position))
                 return;
+            Tile draggable = tileTypes.GetPrefab(TileInteger.Draggable);
             MovableTile movableTile = (MovableTile)CreateTile(draggable, position);
             grid.SubscribeTileMovement(movableTile);
             JoinNeighbors(movableTile);
@@ -125,9 +98,9 @@ namespace Robuzzle
         {
             if (grid.PositionIsFilled(position))
                 return;
-            Motor motor = (Motor)CreateTile(this.motorL, position);
-            JoinNeighbors(movableTile);
-
+            Tile motorL = tileTypes.GetPrefab(TileInteger.LMotor);
+            Motor motor = (Motor)CreateTile(motorL, position);
+            JoinNeighbors(motor);
             grid.SubscribeTileMovement(motor);
         }
 
@@ -135,8 +108,10 @@ namespace Robuzzle
         {
             if (grid.PositionIsFilled(position))
                 return;
-            Motor motor = (Motor)CreateTile(this.motorR, position);
-            JoinNeighbors(movableTile);
+
+            Tile motorR = tileTypes.GetPrefab(TileInteger.RMotor);
+            Motor motor = (Motor)CreateTile(motorR, position);
+            JoinNeighbors(motor);
 
             grid.SubscribeTileMovement(motor);
         }
@@ -145,8 +120,10 @@ namespace Robuzzle
         {
             if (grid.PositionIsFilled(position))
                 return;
-            Motor motor = (Motor)CreateTile(this.motorB, position);
-            JoinNeighbors(movableTile);
+
+            Tile motorB = tileTypes.GetPrefab(TileInteger.BMotor);
+            Motor motor = (Motor)CreateTile(motorB, position);
+            JoinNeighbors(motor);
 
             grid.SubscribeTileMovement(motor);
         }
@@ -155,8 +132,10 @@ namespace Robuzzle
         {
             if (grid.PositionIsFilled(position))
                 return;
-            Motor motor = (Motor)CreateTile(this.motorF, position);
-            JoinNeighbors(movableTile);
+
+            Tile motorF = tileTypes.GetPrefab(TileInteger.FMotor);
+            Motor motor = (Motor)CreateTile(motorF, position);
+            JoinNeighbors(motor);
 
             grid.SubscribeTileMovement(motor);
         }
@@ -165,8 +144,10 @@ namespace Robuzzle
         {
             if (grid.PositionIsFilled(position))
                 return;
-            Motor motor = (Motor)CreateTile(this.motorD, position);
-            JoinNeighbors(movableTile);
+
+            Tile motorD = tileTypes.GetPrefab(TileInteger.DMotor);
+            Motor motor = (Motor)CreateTile(motorD, position);
+            JoinNeighbors(motor);
 
             grid.SubscribeTileMovement(motor);
         }
@@ -175,8 +156,10 @@ namespace Robuzzle
         {
             if (grid.PositionIsFilled(position))
                 return;
-            Motor motor = (Motor)CreateTile(this.motorU, position);
-            JoinNeighbors(movableTile);
+
+            Tile motorU = tileTypes.GetPrefab(TileInteger.UMotor);
+            Motor motor = (Motor)CreateTile(motorU, position);
+            JoinNeighbors(motor);
 
             grid.SubscribeTileMovement(motor);
         }
@@ -187,6 +170,8 @@ namespace Robuzzle
             if (grid.PositionIsFilled(position))
                 return;
 
+            
+            Tile sliderLR = tileTypes.GetPrefab(TileInteger.LRSlider);
             MovableTile movableTile = (MovableTile)CreateTile(sliderLR, position);
             JoinNeighbors(movableTile);
             
@@ -207,7 +192,8 @@ namespace Robuzzle
         {
             if (grid.PositionIsFilled(position))
                 return;
-
+            
+            Tile sliderDU = tileTypes.GetPrefab(TileInteger.DUSlider);
             MovableTile movableTile = (MovableTile)CreateTile(sliderDU, position);
             JoinNeighbors(movableTile);
 
@@ -229,7 +215,8 @@ namespace Robuzzle
 
             if (grid.PositionIsFilled(position))
                 return;
-
+            
+            Tile sliderBF = tileTypes.GetPrefab(TileInteger.BFSlider);
             MovableTile movableTile = (MovableTile)CreateTile(sliderBF, position);
             JoinNeighbors(movableTile);
 
@@ -248,6 +235,8 @@ namespace Robuzzle
         
         public SliderRail CreateRailLR(Vector3Int position)
         {
+
+            Tile railLR = tileTypes.GetPrefab(TileInteger.LRRail);
             MovableTile movableTile = (MovableTile)CreateTile(railLR, position);
             JoinNeighbors(movableTile);
 
@@ -265,6 +254,7 @@ namespace Robuzzle
 
         public SliderRail CreateRailBF(Vector3Int position)
         {
+            Tile railBF = tileTypes.GetPrefab(TileInteger.BFRail);
             MovableTile movableTile = (MovableTile)CreateTile(railBF, position);
             JoinNeighbors(movableTile);
 
@@ -282,6 +272,8 @@ namespace Robuzzle
 
         public SliderRail CreateRailUD(Vector3Int position)
         {
+
+            Tile railDU = tileTypes.GetPrefab(TileInteger.DURail);
             MovableTile movableTile = (MovableTile)CreateTile(railDU, position);
             JoinNeighbors(movableTile);
 

@@ -16,6 +16,9 @@ namespace Robuzzle.LevelBuilding
         public Material boundaryMaterial;
 
         [SerializeField]
+        private TileTypes tileTypes;
+
+        [SerializeField]
         private GameObject mainTileMenu;
         ViewHandler viewHandler;
         #endregion
@@ -50,7 +53,7 @@ namespace Robuzzle.LevelBuilding
         {
             if (grid.CreateTile(selectedTile.tileType, position))
             {
-                MenuTile tile = Instantiate(selectedTile, position, Quaternion.identity);
+                MenuTile tile = Instantiate( selectedTile, position, Quaternion.identity);
                 tile.gameObject.layer = 0;
                 for(int i = 0; i < tile.transform.childCount; i++)
                 {

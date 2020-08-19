@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 051e82c5307f0384aafc89e4b0feb281, type: 3}
+  m_Name: TileTypesData
+  m_EditorClassIdentifier: 
+  tiles:
+  - tileType: 1
+    tilePrefab: {fileID: 6201541154185085018, guid: ca780f089bff7c5498dc7dfce3074339,
+      type: 3}
+  - tileType: 2
+    tilePrefab: {fileID: 639280119566635925, guid: d7596f3a4adca4d46934a412a0ac06ab,
+      type: 3}
+  - tileType: 3
+    tilePrefab: {fileID: 723252325158685377, guid: 75eeb1e297db72746bafcb05ab148ac8,
+      type: 3}
+  - tileType: 4
+    tilePrefab: {fileID: 7903566443967414222, guid: b3827ecbd5de1b14e8c16b25c7867b24,
+      type: 3}
+  - tileType: 36
+    tilePrefab: {fileID: 1121975757555859375, guid: a4906553f55663b4ab0fdd995de20d29,
+      type: 3}
+  - tileType: 37
+    tilePrefab: {fileID: 6660034209689694727, guid: ad860d31de53e724792225e2e004a45f,
+      type: 3}
+  - tileType: 38
+    tilePrefab: {fileID: 6660034209689694727, guid: 6a0ce528e6bad734190795ad6ef7e355,
+      type: 3}
+  - tileType: 39
+    tilePrefab: {fileID: 6660034209689694727, guid: 7bea3a4f2b9e016498bd86ee664e7d49,
+      type: 3}
+  - tileType: 40
+    tilePrefab: {fileID: 5797260444440184349, guid: 9c8d85620fa3bd149a9bd595410c7ede,
+      type: 3}
+  - tileType: 41
+    tilePrefab: {fileID: 5797260444440184349, guid: 05ecde47adca0e64cb64b89b4c89d9b1,
+      type: 3}
+  - tileType: 42
+    tilePrefab: {fileID: 5797260444440184349, guid: 2a4f3ec1efe1f354b9a33536a408c1cb,
+      type: 3}
+  - tileType: 55
+    tilePrefab: {fileID: 1876231057587611135, guid: 6e6f86ad84b3a3641a15852bd157cca1,
+      type: 3}
+  - tileType: 56
+    tilePrefab: {fileID: 3276579335479158786, guid: 178e8061820feb648ab68783a774c0c1,
+      type: 3}
+  - tileType: 57
+    tilePrefab: {fileID: 5192621029326697063, guid: 85ee465d1e2267b45b34d8697fd4cc86,
+      type: 3}
+  - tileType: 58
+    tilePrefab: {fileID: 4764089765600765383, guid: e13ffdd639ca4db4da951c6003cf70e5,
+      type: 3}
+  - tileType: 59
+    tilePrefab: {fileID: 68515532195046975, guid: 68fca1150eb6ca44ba15ea6bc2db5d25,
+      type: 3}
+  - tileType: 60
+    tilePrefab: {fileID: 6573168218375586918, guid: 43886500e140ede4683b5c0ccab61450,
+      type: 3}
+  - tileType: 61
+    tilePrefab: {fileID: 9178313138216119383, guid: c2ee739e464f96746861bb7ae99737cc,
+      type: 3}
+  - tileType: 79
+    tilePrefab: {fileID: 7958119144966579665, guid: 806a2038bed71a846ab6c12f14a49bae,
+      type: 3}
+  - tileType: 83
+    tilePrefab: {fileID: 3147874491594358613, guid: 3eaf52cfec067a1489a8f6b6094f111c,
+      type: 3}

@@ -443,32 +443,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edd8e2965eeaed842a2b8688af09e7af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agent: {fileID: -7529956332594844708, guid: 806a2038bed71a846ab6c12f14a49bae, type: 3}
-  fixedTile: {fileID: 3147874491594358612, guid: 3eaf52cfec067a1489a8f6b6094f111c,
-    type: 3}
-  stairLR: {fileID: 6201541154185085019, guid: ca780f089bff7c5498dc7dfce3074339, type: 3}
-  stairRL: {fileID: 639280119566635930, guid: d7596f3a4adca4d46934a412a0ac06ab, type: 3}
-  stairBF: {fileID: 723252325158685378, guid: 75eeb1e297db72746bafcb05ab148ac8, type: 3}
-  stairFB: {fileID: 7903566443967414223, guid: b3827ecbd5de1b14e8c16b25c7867b24, type: 3}
-  movableTile: {fileID: 9178313138216119382, guid: c2ee739e464f96746861bb7ae99737cc,
-    type: 3}
-  motorL: {fileID: 1876231057587611128, guid: 6e6f86ad84b3a3641a15852bd157cca1, type: 3}
-  motorR: {fileID: 3276579335479158789, guid: 178e8061820feb648ab68783a774c0c1, type: 3}
-  motorB: {fileID: 5192621029326697056, guid: 85ee465d1e2267b45b34d8697fd4cc86, type: 3}
-  motorF: {fileID: 4764089765600765376, guid: e13ffdd639ca4db4da951c6003cf70e5, type: 3}
-  motorD: {fileID: 68515532195046968, guid: 68fca1150eb6ca44ba15ea6bc2db5d25, type: 3}
-  motorU: {fileID: 6573168218375586913, guid: 43886500e140ede4683b5c0ccab61450, type: 3}
-  draggable: {fileID: 1121975757555859374, guid: a4906553f55663b4ab0fdd995de20d29,
-    type: 3}
-  sliderLR: {fileID: 6660034209689694720, guid: ad860d31de53e724792225e2e004a45f,
-    type: 3}
-  railLR: {fileID: 5797260444440184322, guid: 9c8d85620fa3bd149a9bd595410c7ede, type: 3}
-  sliderBF: {fileID: 6660034209689694720, guid: 6a0ce528e6bad734190795ad6ef7e355,
-    type: 3}
-  railBF: {fileID: 5797260444440184322, guid: 05ecde47adca0e64cb64b89b4c89d9b1, type: 3}
-  sliderDU: {fileID: 6660034209689694720, guid: 7bea3a4f2b9e016498bd86ee664e7d49,
-    type: 3}
-  railDU: {fileID: 5797260444440184322, guid: 2a4f3ec1efe1f354b9a33536a408c1cb, type: 3}
+  tileTypes: {fileID: 11400000, guid: 10a127ba1a5673e42a0439b2a7872c15, type: 2}
 --- !u!1 &1798482043
 GameObject:
   m_ObjectHideFlags: 0
