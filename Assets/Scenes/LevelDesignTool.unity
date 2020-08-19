@@ -4487,6 +4487,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currMenu: {fileID: 0}
   boundaryMaterial: {fileID: 2100000, guid: 8081edad55ce64946b94497ad85bf952, type: 2}
+  tileTypes: {fileID: 11400000, guid: 10a127ba1a5673e42a0439b2a7872c15, type: 2}
   mainTileMenu: {fileID: 998333503}
 --- !u!4 &1446629885
 Transform:

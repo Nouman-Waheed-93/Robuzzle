@@ -53,14 +53,23 @@ namespace Robuzzle.LevelBuilding
         {
             if (grid.CreateTile(selectedTile.tileType, position))
             {
-                MenuTile tile = Instantiate( selectedTile, position, Quaternion.identity);
-                tile.gameObject.layer = 0;
-                for(int i = 0; i < tile.transform.childCount; i++)
+                Tile tile = Instantiate(tileTypes.GetPrefab(selectedTile.tileType), position, Quaternion.identity);
+                GameObject tileGO = tile.gameObject;
+                MonoBehaviour[] behaviorsOnTile = tileGO.GetComponents<MonoBehaviour>();
+                for(int i = 0; i < behaviorsOnTile.Length; i++)
                 {
-                    tile.transform.GetChild(i).gameObject.layer = 0;
+                    Destroy(behaviorsOnTile[i]);
                 }
-                tile.transform.localScale = Vector3.one;
-                Destroy(tile);
+                Joint[] joints = tileGO.GetComponents<Joint>();
+                for(int i = 0; i < joints.Length; i++)
+                {
+                    Destroy(joints[i]);
+                }
+                Rigidbody rb;
+                if(tileGO.TryGetComponent<Rigidbody>(out rb))
+                {
+                    Destroy(rb);
+                }
             }
             else
                 RangeExceeded.Invoke();
