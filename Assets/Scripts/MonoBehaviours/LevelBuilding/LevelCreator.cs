@@ -51,22 +51,27 @@ namespace Robuzzle.LevelBuilding
         
         public void PlaceTile(Vector3Int position)
         {
-            if (grid.CreateTile(selectedTile.tileType, position))
+            PlaceTile(selectedTile.tileType, position);
+        }
+
+        public void PlaceTile(TileInteger tileType, Vector3Int position)
+        {
+            if (grid.CreateTile(tileType, position))
             {
-                Tile tile = Instantiate(tileTypes.GetPrefab(selectedTile.tileType), position, Quaternion.identity);
+                Tile tile = Instantiate(tileTypes.GetPrefab(tileType), position, Quaternion.identity);
                 GameObject tileGO = tile.gameObject;
                 MonoBehaviour[] behaviorsOnTile = tileGO.GetComponents<MonoBehaviour>();
-                for(int i = 0; i < behaviorsOnTile.Length; i++)
+                for (int i = 0; i < behaviorsOnTile.Length; i++)
                 {
                     Destroy(behaviorsOnTile[i]);
                 }
                 Joint[] joints = tileGO.GetComponents<Joint>();
-                for(int i = 0; i < joints.Length; i++)
+                for (int i = 0; i < joints.Length; i++)
                 {
                     Destroy(joints[i]);
                 }
                 Rigidbody rb;
-                if(tileGO.TryGetComponent<Rigidbody>(out rb))
+                if (tileGO.TryGetComponent<Rigidbody>(out rb))
                 {
                     Destroy(rb);
                 }

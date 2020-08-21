@@ -30,6 +30,11 @@ namespace Robuzzle
         
         public override void MovePosition(Vector3 position, Draggable draggable)
         {
+            position = new Vector3(
+              Mathf.Clamp(position.x, minBound.x, maxBound.x),
+              Mathf.Clamp(position.y, minBound.y, maxBound.y),
+              Mathf.Clamp(position.z, minBound.z, maxBound.z));
+
             Vector3 toPosition = position - transform.position;
             float Amt = Vector3.Dot(toPosition, MovementAxis);
             rigidbody.AddRelativeForce(MovementAxis * Amt, ForceMode.VelocityChange);
@@ -49,10 +54,11 @@ namespace Robuzzle
 
             float sliderPosition = Vector3.Dot(transform.position, MovementAxis);
             float maxPosition = Vector3.Dot(MaxBound, MovementAxis);
-            float maxDifference = Mathf.Abs(sliderPosition - maxPosition);
+            //            float maxDifference = Mathf.Abs(sliderPosition - maxPosition);
+            float maxDifference = maxPosition - sliderPosition;
 
             float minPosition = Vector3.Dot(MinBound, MovementAxis);
-            float minDifference = Mathf.Abs(sliderPosition - minPosition);
+            float minDifference = sliderPosition - minPosition;
 
             if (currAutomaticDir == 1 && maxDifference < 0.02f)
             {

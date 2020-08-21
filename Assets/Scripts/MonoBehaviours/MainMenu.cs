@@ -7,6 +7,10 @@ using Robuzzle.LevelBuilding;
 
 public class MainMenu : MonoBehaviour
 {
+    enum LoadType { Game, Edit }
+    [SerializeField]
+    LoadType loadFor;
+
     [SerializeField]
     private Button button;
     [SerializeField]
@@ -30,7 +34,15 @@ public class MainMenu : MonoBehaviour
     void OnLevelBtnClicked(string lvl)
     {
         LevelLoader.levelName = lvl;
-        SceneManager.LoadScene("GameScene");
+        if (loadFor == LoadType.Game)
+        {
+            SceneManager.LoadScene("GameScene");
+        }
+        else
+        {
+            LevelLoader loader = FindObjectOfType<EditingLevelLoader>();
+            loader.LoadLevel();
+        }
     }
     
 }

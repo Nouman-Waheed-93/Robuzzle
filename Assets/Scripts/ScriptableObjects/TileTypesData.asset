@@ -73,3 +73,6 @@ MonoBehaviour:
   - tileType: 83
     tilePrefab: {fileID: 3147874491594358613, guid: 3eaf52cfec067a1489a8f6b6094f111c,
       type: 3}
+  - tileType: 82
+    tilePrefab: {fileID: 3147874491594358613, guid: fe2f72a8406db4145a6d6cd027e0ac98,
+      type: 3}

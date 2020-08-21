@@ -28,6 +28,14 @@ namespace Robuzzle.LevelBuilding
             CreateTile(fixedTile, position);
         }
 
+        public void CreateGoalTile(Vector3Int position)
+        {
+            if (grid.PositionIsFilled(position))
+                return;
+            Tile goalTile = tileTypes.GetPrefab(TileInteger.Goal);
+            CreateTile(goalTile, position);
+        }
+
         public void CreateAgent(Vector3Int position)
         {
             if (grid.PositionIsFilled(position))
