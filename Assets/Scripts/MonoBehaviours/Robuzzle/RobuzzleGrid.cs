@@ -80,8 +80,8 @@ namespace Robuzzle {
             RemoveTile(tile);
             //if new tile position is already filled, remove the tile on that position
             //this can cause unstability, but for slider movement it works fine
-            if(GetTileAtPosition(newPosition))
-                RemoveTile(GetTileAtPosition(newPosition));
+          //  if(GetTileAtPosition(newPosition))
+          //      RemoveTile(GetTileAtPosition(newPosition));
             SetTilePosition(tile, newPosition);
         }
 

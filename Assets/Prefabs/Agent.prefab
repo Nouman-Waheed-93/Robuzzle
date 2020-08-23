@@ -41,12 +41,10 @@ GameObject:
   - component: {fileID: 7958119144966579668}
   - component: {fileID: 7958119144966579669}
   - component: {fileID: 7958119144966579666}
-  - component: {fileID: 7958119144966579667}
   - component: {fileID: 7958119144966579664}
   - component: {fileID: 6743273866495249544}
   - component: {fileID: -7529956332594844708}
-  - component: {fileID: 4572987351078265911}
-  - component: {fileID: 6616824282180684681}
+  - component: {fileID: -4197621983406748560}
   m_Layer: 0
   m_Name: Agent
   m_TagString: Player
@@ -116,20 +114,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!136 &7958119144966579667
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7958119144966579665}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &7958119144966579664
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,12 +126,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c2768a0e201e0b4384d5db7dd5e4643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
-  accuracy: 0.1
+  speed: 0.1
+  accuracy: 0.25
   rotSpeed: 10
-  standHeight: 0.2
+  standHeight: 0.7
   bottom: {fileID: 470757567}
-  elevationForce: {x: 0, y: 10, z: 0}
+  elevationForce: {x: 0, y: 40, z: 0}
 --- !u!54 &6743273866495249544
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -156,13 +140,13 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7958119144966579665}
   serializedVersion: 2
-  m_Mass: 0.0000001
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_Mass: 1
+  m_Drag: 2
+  m_AngularDrag: 1
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &-7529956332594844708
 MonoBehaviour:
@@ -199,42 +183,16 @@ MonoBehaviour:
     back: 0
     up: 1
     down: 0
---- !u!95 &4572987351078265911
-Animator:
-  serializedVersion: 3
+--- !u!135 &-4197621983406748560
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7958119144966579665}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &6616824282180684681
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7958119144966579665}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad32a7bdcc466fa498d2602f4d6ef0ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_MovingTurnSpeed: 360
-  m_StationaryTurnSpeed: 180
-  m_JumpPower: 12
-  m_GravityMultiplier: 2
-  m_RunCycleLegOffset: 0.2
-  m_MoveSpeedMultiplier: 1
-  m_AnimSpeedMultiplier: 1
-  m_GroundCheckDistance: 0.1
+  serializedVersion: 2
+  m_Radius: 0.3
+  m_Center: {x: 0, y: 0, z: 0}

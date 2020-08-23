@@ -31,6 +31,8 @@ namespace Robuzzle
         private RobuzzleGrid grid;
         private RigidbodyTile tile; //Agent has a movable tile because, it has to block path and also becauseanother agent can move onto it
         private Rigidbody rigidbody;
+        private float distanceToBottom; //The distance between center and the bottom
+        private Transform goal;
         int wayPointIndex;
         GameObject currentNode;
         #endregion
@@ -42,16 +44,17 @@ namespace Robuzzle
         private void Start()
         {
             WayPointIndex = 0;
+            distanceToBottom = (transform.position - bottom.position).magnitude;
             heightPID = new PIDController();
             grid = (RobuzzleGrid)RobuzzleGrid.singleton;
             tile = GetComponent<RigidbodyTile>();
             rigidbody = GetComponent<Rigidbody>();
             currentNode = grid.GetNodeOnPosition(Vector3Int.FloorToInt(transform.position - Vector3.up));
-            rigidbody.centerOfMass = new Vector3(0, -10, 0);
         }
 
         private void FixedUpdate()
         {
+            StandUpRight();
             MoveAgent();
         }
         #endregion
@@ -72,6 +75,7 @@ namespace Robuzzle
             if (grid.NavMesh.getPathLength() == 0 || WayPointIndex == grid.NavMesh.getPathLength())
                 return;
 
+            Debug.Log("Trying to move");
             //the node we are closest to at this moment
             currentNode = grid.NavMesh.getPathPoint(WayPointIndex);
 
@@ -80,17 +84,18 @@ namespace Robuzzle
                 grid.NavMesh.getPathPoint(WayPointIndex).transform.position,
                 transform.position) < accuracy)
             {
-                WayPointIndex++;
+                if(WayPointIndex != grid.NavMesh.getPathLength()-1)
+                    WayPointIndex++;
            //     charController.Move(Vector3.zero, false, false);
             }
 
             //if we are not at the end of the path
             if (WayPointIndex < grid.NavMesh.getPathLength())
             {
-                Transform goal = grid.NavMesh.getPathPoint(WayPointIndex).transform;
+                goal = grid.NavMesh.getPathPoint(WayPointIndex).transform;
                 Vector3 direction = goal.position - this.transform.position;
-
-                rigidbody.velocity = direction.normalized;
+                Debug.DrawRay(transform.position, direction.normalized, Color.cyan);
+                rigidbody.AddForce(direction * speed, ForceMode.VelocityChange);
             }
         }
         #endregion
@@ -98,11 +103,18 @@ namespace Robuzzle
 
         private void StandUpRight()
         {
-            Ray ray = new Ray(bottom.position, Vector3.down);
+            Ray ray = new Ray(transform.position, Vector3.down);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, standHeight))
+            float targetHeight = standHeight;
+            if (goal != null)
             {
-                float forcePercent = heightPID.Seek(standHeight, hit.distance);
+                float difference = goal.position.y - transform.position.y;
+                if(difference > 0)
+                    targetHeight += difference;
+            }
+            if (Physics.Raycast(ray, out hit, targetHeight + distanceToBottom))
+            {
+                float forcePercent = heightPID.Seek(targetHeight, hit.distance - distanceToBottom);
                 rigidbody.AddForce(elevationForce * forcePercent);
             }
         }
