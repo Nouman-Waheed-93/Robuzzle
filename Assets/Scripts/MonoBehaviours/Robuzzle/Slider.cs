@@ -1,12 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace Robuzzle
 {
     public class Slider : Mechanical
     {
         #region Variables
+
+        public Action<Slider> OnInitialize;
 
         [SerializeField]
         float EndStayTime = 1; //the time for which the slider will stop before changing direction when it reaches its end
@@ -18,7 +21,7 @@ namespace Robuzzle
         Vector3 minBound;
         [SerializeField]
         Vector3 maxBound;
-
+        
         float endTimeCounter;
         int currAutomaticDir = 1; //current automatic movement direction
         #endregion
@@ -26,8 +29,18 @@ namespace Robuzzle
         public Vector3 MinBound { get => minBound; set => minBound = value; }
         public Vector3 MaxBound { get => maxBound; set => maxBound = value; }
         #endregion
+        #region Unity Callbacks
+
+        private void Start()
+        {
+            base.Start();
+            if (OnInitialize != null)
+                OnInitialize(this);
+        }
+
+        #endregion
         #region Methods
-        
+
         public override void MovePosition(Vector3 position, Draggable draggable)
         {
             position = new Vector3(

@@ -194,6 +194,7 @@ namespace Robuzzle.LevelBuilding
             //ignore collision between the rail and slider
 
             Physics.IgnoreCollision(movableTile.transform.GetChild(0).GetComponent<Collider>(), rail.transform.GetChild(0).GetComponent<Collider>(), true);
+            slider.OnInitialize += SetSliderBounds;
         }
 
         public void CreateSliderUD(Vector3Int position)
@@ -216,6 +217,7 @@ namespace Robuzzle.LevelBuilding
             //ignore collision between the rail and slider
 
             Physics.IgnoreCollision(movableTile.transform.GetChild(0).GetComponent<Collider>(), rail.transform.GetChild(0).GetComponent<Collider>(), true);
+            slider.OnInitialize += SetSliderBounds;
         }
 
         public void CreateSliderBF(Vector3Int position)
@@ -239,6 +241,7 @@ namespace Robuzzle.LevelBuilding
             //ignore collision between the rail and slider
 
             Physics.IgnoreCollision(movableTile.transform.GetChild(0).GetComponent<Collider>(), rail.transform.GetChild(0).GetComponent<Collider>(), true);
+            slider.OnInitialize += SetSliderBounds;
         }
         
         public SliderRail CreateRailLR(Vector3Int position)
@@ -252,11 +255,6 @@ namespace Robuzzle.LevelBuilding
 
             SliderRail rail = (SliderRail)movableTile;
             rail.Position = position;
-            //find slider on this movement line
-            Slider slider = GetSliderOnAxis(rail);
-            //set bounds for that slider
-            if (slider)
-                SetSliderBounds(slider);
             return (SliderRail)movableTile;
         }
 
@@ -270,11 +268,6 @@ namespace Robuzzle.LevelBuilding
 
             SliderRail rail = (SliderRail)movableTile;
             rail.Position = position;
-            //find slider on this movement line
-            Slider slider = GetSliderOnAxis(rail);
-            //set bounds for that slider
-            if (slider)
-                SetSliderBounds(slider);
             return (SliderRail)movableTile;
         }
 
@@ -289,13 +282,9 @@ namespace Robuzzle.LevelBuilding
 
             SliderRail rail = (SliderRail)movableTile;
             rail.Position = position;
-            //find slider on this movement line
-            Slider slider = GetSliderOnAxis(rail);
-            //set bounds for that slider
-            if (slider)
-                SetSliderBounds(slider);
             return (SliderRail)movableTile;
         }
+        
         #endregion
         #region Private Methods
         private Tile CreateTile(Tile tile, Vector3Int position)
@@ -473,39 +462,7 @@ namespace Robuzzle.LevelBuilding
             }
             return RBTile;
         }
-        
-        private void SetSliderBound(Slider slider, Tile tile, SideName side)
-        {
-            if (tile != null && tile.GetType() == typeof(SliderRail))
-            {
-                SliderRail rail = (SliderRail)tile;
-                if (RobuzzleUtilities.IsTileAttachableOnOppositeSide(rail, side))
-                    if (RobuzzleUtilities.IsPositiveSide(side))
-                        slider.MaxBound = GetExtremeBoundNIgnoreCollision(slider, rail, side);
-                    else
-                        slider.MinBound = GetExtremeBoundNIgnoreCollision(slider, rail, side);
-            }
-        }
 
-        private Vector3Int GetExtremeBoundNIgnoreCollision(Slider slider, SliderRail rail, SideName side)
-        {
-            Physics.IgnoreCollision(slider.transform.GetChild(0).GetComponent<Collider>(), rail.transform.GetChild(0).GetComponent<Collider>(), true);
-
-            if(RobuzzleUtilities.IsTileAttachableOnSide(rail, side))
-            {
-                Tile tile = grid.GetTileAtPosition(rail.Position + RobuzzleUtilities.GetSideVector(side));
-                if(tile != null && tile.GetType() == typeof(SliderRail))
-                {
-                    SliderRail rail2 = (SliderRail)tile;
-                    if (RobuzzleUtilities.IsTileAttachableOnOppositeSide(rail2, side))
-                        return GetExtremeBoundNIgnoreCollision(slider, rail2, side);
-                }
-                return rail.Position;
-            }
-            
-            return Vector3Int.zero;
-        }
-     
         private void SetSliderBounds(Slider slider)
         {
             if (!slider.AttachableSides.right) //if a slider is not attachable on right side it means, it moves on x axis
@@ -534,6 +491,38 @@ namespace Robuzzle.LevelBuilding
             }
         }
 
+        private void SetSliderBound(Slider slider, Tile tile, SideName side)
+        {
+            if (tile != null && tile.GetType() == typeof(SliderRail))
+            {
+                SliderRail rail = (SliderRail)tile;
+                if (RobuzzleUtilities.IsTileAttachableOnOppositeSide(rail, side))
+                    if (RobuzzleUtilities.IsPositiveSide(side))
+                        slider.MaxBound = GetExtremeBoundNIgnoreCollision(slider, rail, side);
+                    else
+                        slider.MinBound = GetExtremeBoundNIgnoreCollision(slider, rail, side);
+            }
+        }
+
+        private Vector3Int GetExtremeBoundNIgnoreCollision(Slider slider, SliderRail rail, SideName side)
+        {
+            Physics.IgnoreCollision(slider.transform.GetChild(0).GetComponent<Collider>(), rail.transform.GetChild(0).GetComponent<Collider>(), true);
+            grid.RemoveTile(rail);
+            if (RobuzzleUtilities.IsTileAttachableOnSide(rail, side))
+            {
+                Tile tile = grid.GetTileAtPosition(rail.Position + RobuzzleUtilities.GetSideVector(side));
+                if(tile != null && tile.GetType() == typeof(SliderRail))
+                {
+                    SliderRail rail2 = (SliderRail)tile;
+                    if (RobuzzleUtilities.IsTileAttachableOnOppositeSide(rail2, side))
+                        return GetExtremeBoundNIgnoreCollision(slider, rail2, side);
+                }
+                return rail.Position;
+            }
+            
+            return Vector3Int.zero;
+        }
+     
         private Slider GetSliderOnAxis(SliderRail rail)
         {
             Slider retSlider = null;
