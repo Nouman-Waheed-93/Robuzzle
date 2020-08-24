@@ -126,7 +126,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c2768a0e201e0b4384d5db7dd5e4643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.1
+  speed: 0.2
+  maxDrag: 5
+  minDrag: 1
+  standingFirmness: 0
   accuracy: 0.25
   rotSpeed: 10
   standHeight: 0.7
@@ -141,7 +144,7 @@ Rigidbody:
   m_GameObject: {fileID: 7958119144966579665}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 2
+  m_Drag: 4
   m_AngularDrag: 1
   m_UseGravity: 1
   m_IsKinematic: 0

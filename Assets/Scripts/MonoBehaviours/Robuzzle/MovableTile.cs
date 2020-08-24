@@ -55,9 +55,9 @@ namespace Robuzzle
             if (newPosition != Position)
             {
                 PositionChanged(this, newPosition);
-                if(PathFindingNode) //Rails Do not have pathfinding nodes, but their position has to be updated
-                    PathFindingNode.transform.position = Position + Vector3Int.up;
             }
+            if (PathFindingNode) //Rails Do not have pathfinding nodes, but their position has to be updated
+                PathFindingNode.transform.position = transform.position + Vector3.up;
         }
 
         #endregion

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Characters.ThirdPerson;
+using RobuzzlePathFinding;
 
 namespace Robuzzle
 {
@@ -11,6 +12,15 @@ namespace Robuzzle
         // agent speed
         [SerializeField]
         float speed = 5.0f;
+        //the max drag to control speed
+        [SerializeField]
+        float maxDrag = 10;
+        //the min drag to control speed
+        [SerializeField]
+        float minDrag = 1;
+        //force to apply to stick to the tile, agent is standing on
+        [SerializeField]
+        float standingFirmness = 2;
         // Final distance from target
         [SerializeField]
         float accuracy = 1.0f;
@@ -26,80 +36,130 @@ namespace Robuzzle
         //the force to apply to elevate agent4
         [SerializeField]
         Vector3 elevationForce;
-        
+
+        private List<Node> pathList = new List<Node>();
         private PIDController heightPID;
         private RobuzzleGrid grid;
         private RigidbodyTile tile; //Agent has a movable tile because, it has to block path and also becauseanother agent can move onto it
         private Rigidbody rigidbody;
         private float distanceToBottom; //The distance between center and the bottom
+        private bool isOnGround;
         private Transform goal;
+        private GameObject currNode;
         int wayPointIndex;
-        GameObject currentNode;
+        GameObject nextNode;
         #endregion
         #region Properties
         public int WayPointIndex { get => wayPointIndex; private set => wayPointIndex = value; }
-        public GameObject CurrentNode { get => currentNode; private set => currentNode = value; }
+        public GameObject NextNode { get => nextNode; private set => nextNode = value; }
         #endregion
         #region UnityCallbacks
         private void Start()
         {
             WayPointIndex = 0;
-            distanceToBottom = (transform.position - bottom.position).magnitude;
+            distanceToBottom = Vector3.Distance(transform.position, bottom.position);
             heightPID = new PIDController();
             grid = (RobuzzleGrid)RobuzzleGrid.singleton;
+            grid.NavMesh.onNodeRemoved += NodeRemoved;
             tile = GetComponent<RigidbodyTile>();
             rigidbody = GetComponent<Rigidbody>();
-            currentNode = grid.GetNodeOnPosition(Vector3Int.FloorToInt(transform.position - Vector3.up));
+            nextNode = grid.GetNodeOnPosition(Vector3Int.FloorToInt(transform.position - Vector3.up));
+            currNode = NextNode;
+            if (grid.NavMesh.AStar(currNode, nextNode))
+                pathList = grid.NavMesh.reconstructPath(currNode, nextNode);
         }
 
         private void FixedUpdate()
         {
             StandUpRight();
-            MoveAgent();
+            if(isOnGround)
+            Debug.Log("On Ground" );
+            if (isOnGround)
+                MoveAgent();
+            else
+                rigidbody.drag = minDrag;
         }
         #endregion
         #region Public Methods
-        public void SetDestination(Vector3Int destination)
+        public bool SetDestination(Vector3Int destination)
         {
             grid.RemoveTile(tile);
-            currentNode = grid.GetNodeOnPosition(tile.Position - Vector3Int.up);
+            nextNode = grid.GetNodeOnPosition(tile.Position - Vector3Int.up);
             GameObject destinationNode = grid.GetNodeOnPosition(destination);
             WayPointIndex = 0;
-            grid.NavMesh.AStar(currentNode, destinationNode);
+            bool retVal = grid.NavMesh.AStar(nextNode, destinationNode);
+            if (retVal)
+                pathList = grid.NavMesh.reconstructPath(nextNode, destinationNode);
             grid.SetTilePosition(tile, tile.Position);
+            return retVal;
         }
 
         public void MoveAgent()
         {
-            // If we've nowhere to go then just return
-            if (grid.NavMesh.getPathLength() == 0 || WayPointIndex == grid.NavMesh.getPathLength())
-                return;
-
-            Debug.Log("Trying to move");
-            //the node we are closest to at this moment
-            currentNode = grid.NavMesh.getPathPoint(WayPointIndex);
-
-            //if we are close enough to the current waypoint move to next
-            if (Vector3.Distance(
-                grid.NavMesh.getPathPoint(WayPointIndex).transform.position,
-                transform.position) < accuracy)
+            currNode = grid.GetNodeOnPosition(Vector3Int.FloorToInt(tile.Position - Vector3.up));
+            if (currNode)
             {
-                if(WayPointIndex != grid.NavMesh.getPathLength()-1)
-                    WayPointIndex++;
-           //     charController.Move(Vector3.zero, false, false);
-            }
+                //if we are not at the end of the path
+                if (WayPointIndex < getPathLength())
+                {
+                    //the node we are closest to at this moment
+                    nextNode = getPathPoint(WayPointIndex);
+                    goal = getPathPoint(WayPointIndex).transform;
+                    //if we are close enough to the current waypoint move to next
+                    if (Vector3.Distance(
+                        getPathPoint(WayPointIndex).transform.position,
+                        transform.position) < accuracy)
+                    {
+                        WayPointIndex++;
+                    }
+                }
+                else
+                   goal = currNode.transform;
+                 
 
-            //if we are not at the end of the path
-            if (WayPointIndex < grid.NavMesh.getPathLength())
-            {
-                goal = grid.NavMesh.getPathPoint(WayPointIndex).transform;
                 Vector3 direction = goal.position - this.transform.position;
                 Debug.DrawRay(transform.position, direction.normalized, Color.cyan);
-                rigidbody.AddForce(direction * speed, ForceMode.VelocityChange);
+                rigidbody.AddForce(direction.normalized * speed, ForceMode.VelocityChange);
             }
+            else
+                goal = null;
+            LimitVelocity();
         }
         #endregion
         #region Private Methods
+
+        private void NodeRemoved(Node node)
+        {
+            if (pathList.Contains(node) && node.getId() != nextNode)
+            {
+                int index = pathList.IndexOf(node);
+                Debug.Log(index + " onwards");
+                pathList.RemoveRange(index, pathList.Count - index);
+            }
+        }
+
+        private int getPathLength()
+        {
+            return pathList.Count;
+        }
+
+        private GameObject getPathPoint(int index)
+        {
+            return pathList[index].id;
+        }
+
+        private void printPath()
+        {
+            foreach (Node n in pathList)
+            {
+                Debug.Log(n.id.name);
+            }
+        }
+
+        private void LimitVelocity()
+        {
+            rigidbody.drag = Mathf.Lerp(minDrag, maxDrag, Mathf.Clamp01(rigidbody.velocity.sqrMagnitude / speed));
+        }
 
         private void StandUpRight()
         {
@@ -112,7 +172,9 @@ namespace Robuzzle
                 if(difference > 0)
                     targetHeight += difference;
             }
-            if (Physics.Raycast(ray, out hit, targetHeight + distanceToBottom))
+            isOnGround = Physics.Raycast(ray, out hit, targetHeight + distanceToBottom);
+            Debug.DrawRay(transform.position, Vector3.down * (targetHeight + distanceToBottom), Color.green);
+            if (isOnGround)
             {
                 float forcePercent = heightPID.Seek(targetHeight, hit.distance - distanceToBottom);
                 rigidbody.AddForce(elevationForce * forcePercent);

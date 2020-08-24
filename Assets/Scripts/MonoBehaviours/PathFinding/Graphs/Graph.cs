@@ -1,14 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 namespace RobuzzlePathFinding
 {
     public class Graph
     {
+        public Action<Node> onNodeRemoved;
+
         List<Edge> edges = new List<Edge>();
         List<Node> nodes = new List<Node>();
-        List<Node> pathList = new List<Node>();
 
         public Graph() { }
 
@@ -45,10 +47,13 @@ namespace RobuzzlePathFinding
 
                 edges.Remove(edgesToDelete[i]);
             }
-            
+
             //delete the node
             nodes.Remove(nodeToDelete);
-       }
+
+            if (onNodeRemoved != null)
+                onNodeRemoved(nodeToDelete);
+        }
 
         public void AddEdge(GameObject fromNode, GameObject toNode)
         {
@@ -87,30 +92,9 @@ namespace RobuzzlePathFinding
             }
             return null;
         }
-
-
-        public int getPathLength()
-        {
-            return pathList.Count;
-        }
-
-        public GameObject getPathPoint(int index)
-        {
-            return pathList[index].id;
-        }
-
-        public void printPath()
-        {
-            foreach (Node n in pathList)
-            {
-                Debug.Log(n.id.name);
-            }
-        }
-
-
+        
         public bool AStar(GameObject startId, GameObject endId)
         {
-            pathList.Clear();
             Node start = findNode(startId);
             Node end = findNode(endId);
 
@@ -118,7 +102,7 @@ namespace RobuzzlePathFinding
             {
                 return false;
             }
-
+            
             List<Node> open = new List<Node>();
             List<Node> closed = new List<Node>();
             float tentative_g_score = 0;
@@ -135,7 +119,6 @@ namespace RobuzzlePathFinding
                 Node thisnode = open[i];
                 if (thisnode.id == endId)  //path found
                 {
-                    reconstructPath(start, end);
                     return true;
                 }
 
@@ -179,9 +162,17 @@ namespace RobuzzlePathFinding
             return false;
         }
 
-        public void reconstructPath(Node startId, Node endId)
+        public List<Node> reconstructPath(GameObject startNode, GameObject endNode)
         {
-            pathList.Clear();
+            Node startId = findNode(startNode);
+            Node endId = findNode(endNode);
+
+            return reconstructPath(startId, endId);
+        }
+
+        public List<Node> reconstructPath(Node startId, Node endId)
+        {
+            List<Node> pathList = new List<Node>();
             pathList.Add(endId);
 
             var p = endId.cameFrom;
@@ -191,6 +182,7 @@ namespace RobuzzlePathFinding
                 p = p.cameFrom;
             }
             pathList.Insert(0, startId);
+            return pathList;
         }
 
         float distance(Node a, Node b)

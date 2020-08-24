@@ -20,6 +20,7 @@ namespace Robuzzle {
         {
             base.Awake();
         }
+        
         #endregion
         #region PublicMethods
 
@@ -29,7 +30,7 @@ namespace Robuzzle {
             tiles = new Tile[size.x, size.y, size.z];
             graph = new Graph();
         }
-
+        
         public bool PositionIsFilled(Vector3Int position)
         {
             return tiles[position.x, position.y, position.z] != null;
@@ -314,7 +315,8 @@ namespace Robuzzle {
         
         private void Update()
         {
-         //   graph.debugDraw();
+            if(graph != null)
+                graph.debugDraw();
         }
         #endregion
     }
