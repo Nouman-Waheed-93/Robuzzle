@@ -72,8 +72,6 @@ namespace Robuzzle
         private void FixedUpdate()
         {
             StandUpRight();
-            if(isOnGround)
-            Debug.Log("On Ground" );
             if (isOnGround)
                 MoveAgent();
             else

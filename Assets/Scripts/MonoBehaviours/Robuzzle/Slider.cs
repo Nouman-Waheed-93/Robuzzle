@@ -72,6 +72,9 @@ namespace Robuzzle
 
             float minPosition = Vector3.Dot(MinBound, MovementAxis);
             float minDifference = sliderPosition - minPosition;
+            Debug.Log("Max diff " + maxDifference);
+            Debug.Log("Min diff " + minDifference);
+            Debug.Log("Dir " + currAutomaticDir);
 
             if (currAutomaticDir == 1 && maxDifference < 0.02f)
             {
